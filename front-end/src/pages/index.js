@@ -11,7 +11,7 @@ export { default as UniversityListings } from "./findAccommodations/UniversityLi
 export { default as AllProperty } from "./findAccommodations/allproperty";
 export { default as AccommodationView } from "./findAccommodations/accommodationView";
 export { default as AcadamicLanding } from "./academicAssistance/acadamicLanding";
-export { default as CulturalIntergretion } from "./culturalIntegration/cultureIntergrationLanding";
+export { default as CulturalIntergretion } from "./culturalIntegration";
 export { default as VisaSolutionsLanding } from "./visa&ImmigrationAssistance/v&iLanding";
 export { default as VisaDetailsPage } from "./visa&ImmigrationAssistance/visaDetailsPage";
 

@@ -6,4 +6,5 @@ export { default as FeaturedJobs } from "./jobboard/FeaturedJobs";
 export { default as LatestJobs } from "./jobboard/LatestJobs";
 export { default as ValuePropositionsSection } from "./accommodation/ValuePropositionsSection";
 export { default as ListingCard } from "./accommodation/ListingCard";
-
+export { default as ExpatGuides } from "./culturalIntegration/ExpatGuides";
+export { default as ExplorePage } from "./culturalIntegration/ExplorePage";

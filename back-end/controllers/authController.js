@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { createJwt } = require("../utils/jwtHandler");
-const User = require("../models/user.model");
+const User = require("../models/user/user.model");
 const { accessSecritKey, refreshSecritKey } = require("../config/contents");
 const { SUCCESS } = require("../utils/statusCode");
 const ResponseHandler = require("../utils/appSuccess");
