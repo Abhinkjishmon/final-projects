@@ -1,0 +1,6 @@
+.home {
+  background: url("/images/pattern.png");
+  background-color: var(--background-light);
+  object-fit: contain;
+  background-position: left;
+}
