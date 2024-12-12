@@ -11,6 +11,8 @@ const authRoute = require("./routes/authRoute.js");
 const accommodationRoute = require("./routes/findAccomadtionsRoute.js");
 const notificationRoute = require("./routes/notifications.route.js");
 const jobs = require("./routes/jobsRoute.js");
+const culturalfitRoute = require("./routes/culturalfit.route.js");
+const acadamicAssistance = require("./routes/acadamicAssistance.route.js");
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,6 +24,8 @@ app.use(`${baseURl}/auth`, authRoute);
 app.use(`${baseURl}/accommodation`, accommodationRoute);
 app.use(`${baseURl}/notifications`, notificationRoute);
 app.use(`${baseURl}/jobs`, jobs);
+app.use(`${baseURl}/culturalfit`, culturalfitRoute);
+app.use(`${baseURl}/acadamic`, acadamicAssistance);
 
 app.use("**", (req, res) => {
   throw new AppError(NOT_FOUND, "Page not found");
