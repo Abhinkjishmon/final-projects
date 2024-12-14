@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Heart,
   Grid,
@@ -12,8 +12,7 @@ import {
 import homeCard from "/images/homeCard.jpg";
 import map from "/images/map.png";
 import { ListingCard } from "@/components/custom";
-
-
+import { scrollToTop } from "@/utils/scroll";
 
 const MapView = () => {
   return (
@@ -132,6 +131,9 @@ const AllProperty = () => {
     },
   ];
 
+  useEffect(() => {
+    scrollToTop();
+  }, []);
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex flex-col lg:flex-row gap-6">

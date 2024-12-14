@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Heart,
   Share2,
@@ -17,7 +17,7 @@ import {
 import homeImg from "/images/home.png";
 import homeNextImg from "/images/homeCard.jpg";
 import homeCard from "/images/homeCard.jpg";
-import { ListingCard } from "@/components/custom";
+import { BookingForm, ListingCard } from "@/components/custom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,48 +31,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-export function DialogDemo() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
-          Book Now
-        </button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Book now</DialogTitle>
-          <DialogDescription>
-            Make changes to your  here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Save changes
-          </button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+import { scrollToTop } from "@/utils/scroll";
 
 const AccommodationView = () => {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -318,7 +277,21 @@ const AccommodationView = () => {
               </div>
 
               <div className="space-y-4">
-                <DialogDemo />
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                      Book Now
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Book Appointment</DialogTitle>
+                      <DialogDescription>
+                        <BookingForm />
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
                 <button className="w-full border-2 border-blue-600 text-blue-600 py-3 px-4 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
                   <Heart className="w-5 h-5" />
                   Add to Wishlist

@@ -4,6 +4,7 @@ import homeImg from "/images/home.png";
 import { ValuePropositionsSection } from "@/components/custom";
 import { PropertyListings, UniversityListings } from "@/pages";
 import PropertyAdSection from "../PropertyAdSection";
+import { scrollToTop } from "@/utils/scroll";
 
 const DreamHomeLanding = () => {
   const [selectedType, setSelectedType] = useState("All Accommodation");
@@ -16,7 +17,7 @@ const DreamHomeLanding = () => {
     "Home Stay",
   ];
   useEffect(() => {
-    window.scrollTo(0, 0);
+    scrollToTop();
   }, []);
 
   return (
@@ -139,10 +140,10 @@ const DreamHomeLanding = () => {
           </div>
         </div>
       </div>
-      <UniversityListings   />
+      <UniversityListings />
       <ValuePropositionsSection />
       <PropertyListings />
-      <PropertyAdSection/>
+      <PropertyAdSection />
     </>
   );
 };

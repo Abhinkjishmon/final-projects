@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import culturalIntegrationimg from "/images/culturalIntegration.png";
-import { ExpatGuides, ExplorePage } from "@/components/custom";
+import {
+  EditorsPicks,
+  ExpatGuides,
+  ExpatTools,
+  ExplorePage,
+  FaqSection,
+  NewsletterSignup,
+} from "@/components/custom";
+import { scrollToTop } from "@/utils/scroll";
 
 function CulturalIntergretion() {
+useEffect(() => {
+    scrollToTop();
+  }, []);
+  
   return (
     <>
       <div className="min-h-screen flex flex-col md:flex-row items-center bg-gray-50 px-6 md:px-20 py-10">
@@ -43,6 +55,10 @@ function CulturalIntergretion() {
       </div>
       <ExpatGuides />
       <ExplorePage />
+      <ExpatTools />
+      <EditorsPicks />
+      <NewsletterSignup />
+      <FaqSection />
     </>
   );
 }

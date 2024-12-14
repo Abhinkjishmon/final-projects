@@ -10,8 +10,16 @@ export { default as PropertyListings } from "./findAccommodations/propertyCard";
 export { default as UniversityListings } from "./findAccommodations/UniversityListings";
 export { default as AllProperty } from "./findAccommodations/allproperty";
 export { default as AccommodationView } from "./findAccommodations/accommodationView";
-export { default as AcadamicLanding } from "./academicAssistance/acadamicLanding";
+export { default as Acadamic } from "./academicAssistance";
 export { default as CulturalIntergretion } from "./culturalIntegration";
 export { default as VisaSolutionsLanding } from "./visa&ImmigrationAssistance/v&iLanding";
 export { default as VisaDetailsPage } from "./visa&ImmigrationAssistance/visaDetailsPage";
-
+export { default as ClassRoom } from "./academicAssistance/classrooms/ClassRoom";
+export { default as Assignments } from "./academicAssistance/classrooms/Assignments";
+export { default as Aiassistant } from "./academicAssistance/classrooms/Aiassistant";
+export { default as Chats } from "./academicAssistance/classrooms/Chats";
+export { default as DailyTask } from "./academicAssistance/classrooms/DailyTask";
+export { default as LiveClass } from "./academicAssistance/classrooms/LiveClass";
+export { default as Resources } from "./academicAssistance/classrooms/Resources";
+export { default as AccommodationForm } from "./findAccommodations/AccommodationForm/AccommodationForm";
+export { default as Profile } from "./profile";

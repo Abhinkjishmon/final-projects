@@ -1,65 +1,64 @@
 import React from "react";
 
 const ExplorePage = () => {
+  const articles = [
+    {
+      title: "Where to live in the UK: the best places for expats",
+      category: "Moving",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      title: "Moving to the UK: the ultimate checklist",
+      category: "Moving",
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      title: "The cost of living in the UK",
+      category: "Moving",
+      image: "https://via.placeholder.com/150",
+    },
+  ];
+
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="relative w-full md:w-2/3">
-        <img
-          src="https://example.com/cityscape.jpg"
-          alt="An introduction to the United Kingdom"
-          className="w-full h-72 md:h-auto object-cover"
-        />
-        <div className="absolute bottom-0 left-0 p-4 text-white bg-black bg-opacity-50 w-full">
-          <h1 className="text-2xl md:text-4xl font-bold">
-            An introduction to the United Kingdom
-          </h1>
+    <div className="max-w-6xl mx-auto md:my-20 p-4">
+      <h1 className="text-3xl font-bold mb-6">ExplorePage</h1>
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Large Image Section */}
+        <div className="lg:col-span-2">
+          <div className="relative h-64 lg:h-80">
+            <img
+              src="https://via.placeholder.com/800x400"
+              alt="An introduction to the United Kingdom"
+              className="w-full h-full object-cover rounded-lg"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 rounded-lg">
+              <h2 className="text-white text-lg lg:text-2xl font-bold">
+                An introduction to the United Kingdom
+              </h2>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="w-full md:w-1/3 bg-gray-100 p-4 md:p-6">
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-xl font-bold">
-              Where to live in the UK: the best places for expats
-            </h2>
-            <div className="flex items-center space-x-2 mt-2">
-              <div className="w-16 h-16 rounded-full overflow-hidden">
-                <img
-                  src="https://example.com/city-street.jpg"
-                  alt="Where to live in the UK"
-                  className="w-full h-full object-cover"
-                />
+
+        {/* Articles Section */}
+        <div className="flex flex-col gap-4">
+          {articles.map((article, index) => (
+            <div
+              key={index}
+              className="flex items-start gap-4 bg-white shadow-md p-4 rounded-lg"
+            >
+              <img
+                src={article.image}
+                alt={article.title}
+                className="w-16 h-16 object-cover rounded-lg"
+              />
+              <div>
+                <p className="text-green-500 text-sm font-medium">
+                  {article.category}
+                </p>
+                <h3 className="text-md font-semibold">{article.title}</h3>
               </div>
-              <p className="text-gray-500">Moving</p>
             </div>
-          </div>
-          <div>
-            <h2 className="text-xl font-bold">
-              Moving to the UK: the ultimate checklist
-            </h2>
-            <div className="flex items-center space-x-2 mt-2">
-              <div className="w-16 h-16 rounded-full overflow-hidden">
-                <img
-                  src="https://example.com/moving-boxes.jpg"
-                  alt="Moving to the UK"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <p className="text-gray-500">Moving</p>
-            </div>
-          </div>
-          <div>
-            <h2 className="text-xl font-bold">The cost of living in the UK</h2>
-            <div className="flex items-center space-x-2 mt-2">
-              <div className="w-16 h-16 rounded-full overflow-hidden">
-                <img
-                  src="https://example.com/cost-of-living.jpg"
-                  alt="The cost of living in the UK"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <p className="text-gray-500">Moving</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

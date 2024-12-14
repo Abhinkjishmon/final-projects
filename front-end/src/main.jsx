@@ -3,18 +3,27 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import {
-  AcadamicLanding,
+  Acadamic,
+  AccommodationForm,
   AccommodationView,
+  Aiassistant,
   AllProperty,
+  Assignments,
+  Chats,
+  ClassRoom,
   CulturalIntergretion,
+  DailyTask,
   DreamHomeLanding,
   Home,
   Jobboard,
   JobDescriptionPage,
   JobListings,
   JobPostingForm,
+  LiveClass,
   Login,
+  Profile,
   Register,
+  Resources,
   VisaDetailsPage,
   VisaSolutionsLanding,
 } from "./pages";
@@ -33,6 +42,10 @@ const route = createBrowserRouter([
   {
     path: "/signin",
     element: <Login />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
   {
     path: "/signup",
@@ -88,6 +101,10 @@ const route = createBrowserRouter([
         path: "view-Property",
         element: <AccommodationView />,
       },
+      {
+        path: "new-accommodation",
+        element: <AccommodationForm />,
+      },
     ],
   },
   {
@@ -102,7 +119,41 @@ const route = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <AcadamicLanding />,
+        element: <Acadamic />,
+      },
+      {
+        path: "class-room",
+        element: <Outlet />,
+        children: [
+          {
+            path: "",
+            element: <ClassRoom />,
+          },
+          {
+            path: "resources",
+            element: <Resources />,
+          },
+          {
+            path: "live-class",
+            element: <LiveClass />,
+          },
+          {
+            path: "daily-task",
+            element: <DailyTask />,
+          },
+          {
+            path: "chats",
+            element: <Chats />,
+          },
+          {
+            path: "ai-assistant",
+            element: <Aiassistant />,
+          },
+          {
+            path: "assignments",
+            element: <Assignments />,
+          },
+        ],
       },
     ],
   },

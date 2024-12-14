@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import JobboardImg from "/images/jobboard.png";
 import "./style.css";
 import { CreateJob, FeaturedJobs, JobCategories, LatestJobs } from "@/components/custom";
+import { scrollToTop } from "@/utils/scroll";
 
 function Jobboard() {
+  useEffect(() => {
+      scrollToTop();
+    }, []);
   return (
     <>
       <section className="bg-blue-300 home flex flex-col md:flex-row items-center justify-between p-6 md:p-12">

@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Users, Send, CheckCircle } from "lucide-react";
 import BusinessServices from "../businessServices";
 import VisaTypesSection from "../visaTypesSection";
+import { scrollToTop } from "@/utils/scroll";
 
 const VisaSolutionsLanding = () => {
+  useEffect(() => {
+      scrollToTop();
+    }, []);
   return (
     <>
       <div className="min-h-screen">
