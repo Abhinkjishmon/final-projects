@@ -6,21 +6,28 @@ import {
   Acadamic,
   AccommodationForm,
   AccommodationView,
+  Accommodtions,
   Aiassistant,
   AllProperty,
+  ApplicationsManager,
   Assignments,
+  Blogs,
   Chats,
   ClassRoom,
+  ClassRoomInfo,
   CulturalIntergretion,
   DailyTask,
   DreamHomeLanding,
+  EditProfile,
   Home,
   Jobboard,
   JobDescriptionPage,
   JobListings,
   JobPostingForm,
+  Jobs,
   LiveClass,
   Login,
+  Notifications,
   Profile,
   Register,
   Resources,
@@ -45,7 +52,47 @@ const route = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: <Outlet />,
+    children: [
+      {
+        path: "",
+        element: <Profile />,
+      },
+      {
+        path: "edit-profile",
+        element: <EditProfile />,
+      },
+      {
+        path: "jobs",
+        element: <Outlet />,
+        children: [
+          {
+            path: "",
+            element: <Jobs />,
+          },
+          {
+            path: "applications",
+            element: <ApplicationsManager />,
+          },
+        ],
+      },
+      {
+        path: "accommodtions",
+        element: <Accommodtions />,
+      },
+      {
+        path: "blogs",
+        element: <Blogs />,
+      },
+      {
+        path: "classRoom-Info",
+        element: <ClassRoomInfo />,
+      },
+      {
+        path: "notifications",
+        element: <Notifications />,
+      },
+    ],
   },
   {
     path: "/signup",

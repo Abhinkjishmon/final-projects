@@ -1,12 +1,17 @@
 import React from "react";
 import { Home, User, Image, Bell, Settings } from "lucide-react";
+import { Link } from "react-router-dom";
+import { FaUserEdit } from "react-icons/fa";
 
 const menuItems = [
-  { icon: Home, text: "Home", href: "#" },
-  { icon: User, text: "About", href: "#" },
-  { icon: Image, text: "Gallery", href: "#" },
-  { icon: Bell, text: "Notifications", href: "#" },
-  { icon: Settings, text: "Edit Profile", href: "#" },
+  { icon: Home, text: "Home", href: "/profile" },
+  { icon: Image, text: "Jobs", href: "/profile/jobs" },
+  { icon: User, text: "Accommodation", href: "/profile/accommodtions" },
+  { icon: Image, text: "Class Rooms", href: "/profile/classRoom-Info" },
+  { icon: Image, text: "Blogs", href: "/profile/blogs" },
+  { icon: Bell, text: "Notifications", href: "/profile/notifications" },
+  { icon: FaUserEdit, text: "Edit Profile", href: "/profile/edit-profile" },
+  { icon: Settings, text: "Log Out", href: "/profile/jobs" },
 ];
 
 const Sidebar = () => {
@@ -28,13 +33,12 @@ const Sidebar = () => {
         <ul className="space-y-4">
           {menuItems.map((item, index) => (
             <li key={index}>
-              <a
-                href={item.href}
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors duration-200"
-              >
-                <item.icon className="w-6 h-6" />
-                <span className="md:hidden lg:inline">{item.text}</span>
-              </a>
+              <Link to={item.href}>
+                <a className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                  <item.icon className="w-6 h-6" />
+                  <span className="md:hidden lg:inline">{item.text}</span>
+                </a>
+              </Link>
             </li>
           ))}
         </ul>

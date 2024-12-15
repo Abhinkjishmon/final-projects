@@ -23,3 +23,11 @@ export { default as LiveClass } from "./academicAssistance/classrooms/LiveClass"
 export { default as Resources } from "./academicAssistance/classrooms/Resources";
 export { default as AccommodationForm } from "./findAccommodations/AccommodationForm/AccommodationForm";
 export { default as Profile } from "./profile";
+export { default as Accommodtions } from "./profile/profilemanage/Accommodtions";
+export { default as Blogs } from "./profile/profilemanage/Blogs";
+export { default as ClassRoomInfo } from "./profile/profilemanage/ClassRoomInfo";
+export { default as Jobs } from "./profile/profilemanage/jobs/Jobs";
+export { default as Notifications } from "./profile/profilemanage/notifications/Notifications";
+export { default as ProfileInfo } from "./profile/profilemanage/ProfileInfo";
+export { default as ApplicationsManager } from "./profile/profilemanage/jobs/ApplicationsManager";
+export { default as EditProfile } from "./profile/profilemanage/EditProfile";
