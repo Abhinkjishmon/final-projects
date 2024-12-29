@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import {
   Acadamic,
@@ -34,25 +35,39 @@ import {
   VisaDetailsPage,
   VisaSolutionsLanding,
 } from "./pages";
-import { Footer, Header } from "./components/custom";
+import { Footer, Header, ProtectedRoute } from "./components/custom";
+import { ToastContainer } from "react-toastify";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+
+
+
 const route = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <>
-        <Header />
-        <Home />
-        <Footer />
-      </>
-    ),
-  },
   {
     path: "/signin",
     element: <Login />,
   },
   {
-    path: "/profile",
-    element: <Outlet />,
+    path: "/signup",
+    element: <Register />,
+  },
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <Header />
+        <Home />
+        <Footer />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/profile/:id",
+    element: (
+      <ProtectedRoute>
+        <Outlet />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "",
@@ -64,7 +79,11 @@ const route = createBrowserRouter([
       },
       {
         path: "jobs",
-        element: <Outlet />,
+        element: (
+          <ProtectedRoute>
+            <Outlet />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: "",
@@ -94,18 +113,15 @@ const route = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "/signup",
-    element: <Register />,
-  },
+
   {
     path: "/find-job",
     element: (
-      <>
+      <ProtectedRoute>
         <Header />
         <Outlet />
         <Footer />
-      </>
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -117,7 +133,7 @@ const route = createBrowserRouter([
         element: <JobListings />,
       },
       {
-        path: "about-job",
+        path: "about-job/:jobId",
         element: <JobDescriptionPage />,
       },
       {
@@ -129,11 +145,11 @@ const route = createBrowserRouter([
   {
     path: "/find-accommodations",
     element: (
-      <>
+      <ProtectedRoute>
         <Header />
         <Outlet />
         <Footer />
-      </>
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -145,7 +161,7 @@ const route = createBrowserRouter([
         element: <AllProperty />,
       },
       {
-        path: "view-Property",
+        path: "view-Property/:id",
         element: <AccommodationView />,
       },
       {
@@ -157,11 +173,11 @@ const route = createBrowserRouter([
   {
     path: "/acadamic",
     element: (
-      <>
+      <ProtectedRoute>
         <Header />
         <Outlet />
         <Footer />
-      </>
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -207,11 +223,11 @@ const route = createBrowserRouter([
   {
     path: "/visaImmigrationAssistance",
     element: (
-      <>
+      <ProtectedRoute>
         <Header />
         <Outlet />
         <Footer />
-      </>
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -227,11 +243,11 @@ const route = createBrowserRouter([
   {
     path: "/culturalIntergretion",
     element: (
-      <>
+      <ProtectedRoute>
         <Header />
         <Outlet />
         <Footer />
-      </>
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -244,6 +260,22 @@ const route = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={route}></RouterProvider>
+    <Provider store={store}>
+      <RouterProvider router={route}></RouterProvider>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
+    </Provider>
   </StrictMode>
 );

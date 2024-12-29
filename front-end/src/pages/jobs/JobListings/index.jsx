@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -12,16 +12,23 @@ import {
   Save,
   Search,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { getAllJobs } from "@/apiService.js/job.service";
+import { SkeletonCard, Spinner } from "@/components/custom";
+import { getRelativeTime } from "@/utils/date";
+import { scrollToTop } from "@/utils/scroll";
 
 const JobListings = () => {
+  const [loader, setLaoder] = useState(false);
+  const [jobListings, setjobListings] = useState([]);
   const [expandedSections, setExpandedSections] = useState({
     salary: false,
     companyType: false,
     roleCategory: false,
   });
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category") || "All";
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
       ...prev,
@@ -50,157 +57,14 @@ const JobListings = () => {
     ],
   };
 
-  const jobListings = [
-    {
-      title: "Web Designer",
-      company: "Vega Moon Technologies",
-      rating: 4.2,
-      reviews: 43,
-      experience: "1 Yrs",
-      salary: "Not disclosed",
-      location: "Ghaziabad, New Delhi",
-      skills: [
-        "jQuery",
-        "Illustrator",
-        "MySQL",
-        "WordPress",
-        "Javascript",
-        "PHP",
-        "HTML",
-        "Adobe",
-      ],
-      description:
-        "You should have excellent Knowledge of HTML5, CSS3, Responsive design",
-      logo: "VM",
-      postedDays: "30+ Days Ago",
-    },
-    {
-      title: "Web Designer - Rotational Night Shifts",
-      company: "FoodHub Software Solutions",
-      rating: 4.0,
-      reviews: 51,
-      experience: "1-3 Yrs",
-      salary: "2-4.5 Lacs PA",
-      location: "Chennai(Porur)",
-      skills: [
-        "CSS",
-        "responsive",
-        "HTML",
-        "bootstrap",
-        "web design",
-        "Responsive Web Design",
-      ],
-      description:
-        "Be flexible with rotational shifts and week-offs. Meet specified turnaround time",
-      logo: "FH",
-      postedDays: "11 Days Ago",
-    },
-    {
-      title: "Web Designer - Rotational Night Shifts",
-      company: "FoodHub Software Solutions",
-      rating: 4.0,
-      reviews: 51,
-      experience: "1-3 Yrs",
-      salary: "2-4.5 Lacs PA",
-      location: "Chennai(Porur)",
-      skills: [
-        "CSS",
-        "responsive",
-        "HTML",
-        "bootstrap",
-        "web design",
-        "Responsive Web Design",
-      ],
-      description:
-        "Be flexible with rotational shifts and week-offs. Meet specified turnaround time",
-      logo: "FH",
-      postedDays: "11 Days Ago",
-    },
-    {
-      title: "Web Designer - Rotational Night Shifts",
-      company: "FoodHub Software Solutions",
-      rating: 4.0,
-      reviews: 51,
-      experience: "1-3 Yrs",
-      salary: "2-4.5 Lacs PA",
-      location: "Chennai(Porur)",
-      skills: [
-        "CSS",
-        "responsive",
-        "HTML",
-        "bootstrap",
-        "web design",
-        "Responsive Web Design",
-      ],
-      description:
-        "Be flexible with rotational shifts and week-offs. Meet specified turnaround time",
-      logo: "FH",
-      postedDays: "11 Days Ago",
-    },
-    {
-      title: "Web Designer - Rotational Night Shifts",
-      company: "FoodHub Software Solutions",
-      rating: 4.0,
-      reviews: 51,
-      experience: "1-3 Yrs",
-      salary: "2-4.5 Lacs PA",
-      location: "Chennai(Porur)",
-      skills: [
-        "CSS",
-        "responsive",
-        "HTML",
-        "bootstrap",
-        "web design",
-        "Responsive Web Design",
-      ],
-      description:
-        "Be flexible with rotational shifts and week-offs. Meet specified turnaround time",
-      logo: "FH",
-      postedDays: "11 Days Ago",
-    },
-    {
-      title: "Web Designer - Rotational Night Shifts",
-      company: "FoodHub Software Solutions",
-      rating: 4.0,
-      reviews: 51,
-      experience: "1-3 Yrs",
-      salary: "2-4.5 Lacs PA",
-      location: "Chennai(Porur)",
-      skills: [
-        "CSS",
-        "responsive",
-        "HTML",
-        "bootstrap",
-        "web design",
-        "Responsive Web Design",
-      ],
-      description:
-        "Be flexible with rotational shifts and week-offs. Meet specified turnaround time",
-      logo: "FH",
-      postedDays: "11 Days Ago",
-    },
-    {
-      title: "Web Designer - Rotational Night Shifts",
-      company: "FoodHub Software Solutions",
-      rating: 4.0,
-      reviews: 51,
-      experience: "1-3 Yrs",
-      salary: "2-4.5 Lacs PA",
-      location: "Chennai(Porur)",
-      skills: [
-        "CSS",
-        "responsive",
-        "HTML",
-        "bootstrap",
-        "web design",
-        "Responsive Web Design",
-      ],
-      description:
-        "Be flexible with rotational shifts and week-offs. Meet specified turnaround time",
-      logo: "FH",
-      postedDays: "11 Days Ago",
-    },
-  ];
+  const fetchAllJobs = async () => {
+    const response = await getAllJobs(category);
+    setjobListings(response.jobs);
+  };
+  useEffect(() => {
+    scrollToTop();
+    fetchAllJobs();
+  }, []);
 
   const SearchBar = () => (
     <div className="bg-white shadow-sm mb-6 p-4 rounded-lg">
@@ -250,41 +114,43 @@ const JobListings = () => {
 
   const JobCard = ({ job }) => (
     <Card className="mb-4">
-      <Link to={"/find-job/about-job"}>
+      <Link to={`/find-job/about-job/${job._id}`}>
         <CardContent className="p-4">
           <div className="flex justify-between">
             <div className="flex-grow">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">{job.title}</h2>
-                <button className="text-blue-600">
-                  <Save size={20} />
-                </button>
               </div>
               <div className="flex items-center space-x-2 mt-2">
                 <span className="font-medium">{job.company}</span>
                 <div className="flex items-center">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span className="ml-1">{job.rating}</span>
                   <span className="ml-1 text-gray-600">
-                    ({job.reviews} Reviews)
+                    ({job.reviews} Applications)
                   </span>
                 </div>
               </div>
               <div className="flex flex-wrap gap-4 mt-3 text-gray-600">
                 <div className="flex items-center">
                   <Clock className="h-4 w-4 mr-1" />
-                  {job.experience}
+                  <span className="font-bold">Experience:</span>
+                  {job.experienceRequired}y
                 </div>
                 <div className="flex items-center">
                   <IndianRupee className="h-4 w-4 mr-1" />
-                  {job.salary}
+                  <span className="font-bold">Salary:</span>
+
+                  {job.salary ? job.salary : "Not disclosed"}
                 </div>
                 <div className="flex items-center">
                   <MapPin className="h-4 w-4 mr-1" />
                   {job.location}
                 </div>
               </div>
-              <p className="mt-3 text-gray-600">{job.description}</p>
+              <p className="mt-3 text-gray-600">
+                {job.description.length > 50
+                  ? `${job.description.substring(0, 100)}...`
+                  : job.description}
+              </p>
               <div className="flex flex-wrap gap-2 mt-3">
                 {job.skills.map((skill, index) => (
                   <span
@@ -295,7 +161,9 @@ const JobListings = () => {
                   </span>
                 ))}
               </div>
-              <div className="mt-4 text-gray-500 text-sm">{job.postedDays}</div>
+              <div className="mt-4 text-gray-500 text-sm">
+                {getRelativeTime(job.postedDate)}
+              </div>
             </div>
           </div>
         </CardContent>
@@ -317,25 +185,46 @@ const JobListings = () => {
               onToggle={() => toggleSection("salary")}
             />
             <FilterSection
-              title="Company type"
+              title="Job Type"
               items={filters.companyType}
               isExpanded={expandedSections.companyType}
               onToggle={() => toggleSection("companyType")}
             />
             <FilterSection
-              title="Role category"
+              title="Experience"
+              items={filters.roleCategory}
+              isExpanded={expandedSections.roleCategory}
+              onToggle={() => toggleSection("roleCategory")}
+            />
+            <FilterSection
+              title="Category"
               items={filters.roleCategory}
               isExpanded={expandedSections.roleCategory}
               onToggle={() => toggleSection("roleCategory")}
             />
           </div>
 
-          {/* Job Listings Section */}
-          <div className="md:w-3/4">
-            {jobListings.map((job, index) => (
-              <JobCard key={index} job={job} />
-            ))}
-          </div>
+          {loader ? (
+            <>
+              <SkeletonCard />
+            </>
+          ) : (
+            <>
+              {jobListings.length > 0 ? (
+                <>
+                  <div className="md:w-3/4">
+                    {jobListings.map((job, index) => (
+                      <JobCard key={index} job={job} />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="w-full text-center">
+                  <h2 className="text-xl text-gray-600">No Job Found</h2>
+                </div>
+              )}
+            </>
+        )}
         </div>
       </div>
     </div>

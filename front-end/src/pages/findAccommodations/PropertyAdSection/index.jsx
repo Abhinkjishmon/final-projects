@@ -8,7 +8,6 @@ const PropertyAdSection = () => {
   return (
     <div className="container mx-auto lg:px-28 px-4 py-12 md:py-16">
       <div className="grid md:grid-cols-2 gap-8 items-center">
-        {/* Left Content */}
         <div className="space-y-6">
           <div className="text-orange-500 font-semibold uppercase tracking-wide">
             Accommodation Providers

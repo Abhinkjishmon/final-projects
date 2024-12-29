@@ -1,25 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Upload } from "lucide-react";
 
 export function ImageUpload({ label, imageUrl, onChange, className = "" }) {
+  const [image, setImage] = useState();
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
+
+    const reader = new FileReader();
     if (file) {
-      onChange(file);
+      reader.onload = () => {
+        setImage(reader.result);
+        onChange(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
+  useEffect(() => {
+    console.log(imageUrl)
+    setImage(imageUrl);
+  }, [imageUrl]);
 
   return (
     <div className={`relative ${className}`}>
       <div
         className={`aspect-[3/1] rounded-lg overflow-hidden bg-gray-100 ${className} `}
       >
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={label}
-            className="w-full h-full object-cover"
-          />
+        {image ? (
+          <img src={image} alt={label} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-100">
             <Upload className="w-8 h-8 text-gray-400" />

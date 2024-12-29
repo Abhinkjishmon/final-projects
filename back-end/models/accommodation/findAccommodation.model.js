@@ -74,12 +74,6 @@ const accommodationSchema = new mongoose.Schema(
     images: [
       {
         type: String,
-        validate: {
-          validator: function (value) {
-            return /^https?:\/\/.+/.test(value); // URL validation
-          },
-          message: "Invalid image URL format",
-        },
       },
     ],
     availabilityStatus: {

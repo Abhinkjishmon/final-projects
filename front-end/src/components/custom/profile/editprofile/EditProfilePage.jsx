@@ -1,19 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Save } from "lucide-react";
 import ImageUpload from "./ImageUpload";
 import SocialMediaInput from "./SocialMediaInput";
 import AddressForm from "./AddressForm";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchUserProfile } from "@/redux/userInfoSlice";
+import { updateUserInfo } from "@/apiService.js/auth.service";
 
 function EditProfilePage() {
+  const { profileInfo } = useSelector((state) => state.userProfile);
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  // Initialize the state with default values
   const [profile, setProfile] = useState({
-    fullName: "John Doe",
-    email: "john.doe@example.com",
+    fullName: "",
+    email: "",
     about: "",
     experience: "",
-    profileImage:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150",
-    coverImage:
-      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+    profileImage: "",
+    coverImage: "",
     socialMedia: [],
     address: {
       street: "",
@@ -23,34 +30,97 @@ function EditProfilePage() {
       zipCode: "",
     },
   });
+  const [changesProfileInfo, setChangesProfileInfo] = useState({});
+  // Fetch the user profile when the component mounts
+  useEffect(() => {
+    dispatch(fetchUserProfile(id));
+  }, [dispatch, id]);
 
+  useEffect(() => {
+    if (profileInfo) {
+      setProfile({
+        fullName: profileInfo.fullname || "",
+        email: profileInfo.email || "",
+        about: profileInfo.about || "",
+        experience: profileInfo.experience || "",
+        profileImage: profileInfo?.profileImg || "",
+        coverImage: profileInfo.coverImage || "",
+        socialMedia: profileInfo.socialMedia || [],
+        address: {
+          street: profileInfo.address?.street || "",
+          city: profileInfo.address?.city || "",
+          state: profileInfo.address?.state || "",
+          country: profileInfo.address?.country || "",
+          zipCode: profileInfo.address?.zipCode || "",
+        },
+      });
+    }
+  }, [profileInfo]);
+
+  const onChangeCoverFile = (file) => {
+    setChangesProfileInfo((prevProfile) => ({
+      ...prevProfile,
+      coverImage: file,
+    }));
+  };
+
+  const onChangeProfileFile = (file) => {
+    setChangesProfileInfo((prevProfile) => ({
+      ...prevProfile,
+      profileImage: file,
+    }));
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Profile updated:", profile);
+    const formData = new FormData();
+
+    // Append basic profile fields
+    formData.append("fullname", profile.fullName);
+    formData.append("email", profile.email);
+    formData.append("about", profile.about);
+    formData.append("experience", profile.experience);
+    if (changesProfileInfo.profileImage) {
+      formData.append("profileImg", changesProfileInfo.profileImage);
+    }
+    if (changesProfileInfo.coverImage) {
+      formData.append("coverImg", changesProfileInfo.coverImage);
+    }
+
+    // Append social media links
+    profile.socialMedia.forEach((link, index) => {
+      formData.append(`socialMedia[${index}]`, link);
+    });
+
+    // Append address fields
+    Object.entries(profile.address).forEach(([key, value]) => {
+      formData.append(`address[${key}]`, value);
+    });
+    updateUserProfile(id, formData);
   };
+  async function updateUserProfile(id, formData) {
+    const responsce = await updateUserInfo(id, formData);
+    console.log(responsce);
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <form onSubmit={handleSubmit}>
-            {/* Cover Image */}
             <ImageUpload
               label="Cover Image"
-              imageUrl={profile.coverImage}
-              onChange={(file) => console.log("Cover image:", file)}
+              imageUrl={profileInfo?.coverImg}
+              onChange={(file) => onChangeCoverFile(file)}
               className="mb-6"
             />
 
             <div className="px-8 py-6">
-              {/* Profile Image */}
               <div className="flex items-center gap-6 mb-8">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
                   <ImageUpload
                     label="Profile Image"
-                    imageUrl={profile.profileImage}
-                    onChange={(file) => console.log("Profile image:", file)}
+                    imageUrl={profileInfo?.profileImg}
+                    onChange={(file) => onChangeProfileFile(file)}
                     className="w-full h-full "
                   />
                 </div>

@@ -20,7 +20,6 @@ const createAccommodation = async (req, res) => {
       userId,
       location,
     } = req.body;
-    console.log(req.body);
     if (
       !title ||
       !description ||
@@ -55,6 +54,7 @@ const createAccommodation = async (req, res) => {
 
     // Respond with the created accommodation
     res.status(201).json({
+      status: "SUCCESS",
       message: "Accommodation created successfully",
       accommodation: savedAccommodation,
     });
@@ -151,13 +151,18 @@ const getAccommodationById = async (req, res) => {
 // Get All Accommodations
 const getAllAccommodations = async (req, res) => {
   try {
-    // Fetch all accommodations from the database
+    const { userId } = req.body;
     const accommodations = await Accommodation.find();
-
-    // Respond with the list of accommodations
+    const accommodationWishList = await AccommodationsWishlistModel.find({
+      userId,
+    });
+    const accommodationIds = accommodationWishList.flatMap(
+      (wishList) => wishList.accommodations
+    );
     res.status(200).json({
       message: "Accommodations fetched successfully",
       accommodations,
+      accommodationIds,
     });
   } catch (error) {
     console.error("Error fetching accommodations:", error);
@@ -170,8 +175,8 @@ const getAllAccommodations = async (req, res) => {
 // Add Accommodation to Wishlist
 const addToWishlist = async (req, res) => {
   try {
-    const { userId } = req.body; // User ID from request body
-    const { accommodationId } = req.body; // Accommodation ID from request body
+    const { userId } = req.body;
+    const { accommodationId } = req.params;
 
     // Find the user's wishlist or create a new one
     let wishlist = await AccommodationsWishlistModel.findOne({ userId });
@@ -185,9 +190,10 @@ const addToWishlist = async (req, res) => {
 
     // Check if the accommodation is already in the wishlist
     if (wishlist.accommodations.includes(accommodationId)) {
-      return res
-        .status(400)
-        .json({ message: "Accommodation already in wishlist" });
+      return res.status(400).json({
+        status: "FAILD",
+        message: "Accommodation already in wishlist",
+      });
     }
 
     // Add the accommodation to the wishlist
@@ -195,6 +201,7 @@ const addToWishlist = async (req, res) => {
     await wishlist.save();
 
     res.status(200).json({
+      status: "SUCCESS",
       message: "Accommodation added to wishlist",
       wishlist,
     });
@@ -209,17 +216,13 @@ const addToWishlist = async (req, res) => {
 // Remove Accommodation from Wishlist
 const removeFromWishlist = async (req, res) => {
   try {
-    const { userId } = req.body; // User ID from request body
-    const { accommodationId } = req.body; // Accommodation ID from request body
-
-    // Find the user's wishlist
+    const { userId } = req.body;
+    const { accommodationId } = req.params;
     const wishlist = await AccommodationsWishlistModel.findOne({ userId });
 
     if (!wishlist) {
       return res.status(404).json({ message: "Wishlist not found" });
     }
-
-    // Remove the accommodation from the wishlist
     const index = wishlist.accommodations.indexOf(accommodationId);
     if (index === -1) {
       return res.status(400).json({ message: "Accommodation not in wishlist" });
@@ -229,6 +232,7 @@ const removeFromWishlist = async (req, res) => {
     await wishlist.save();
 
     res.status(200).json({
+      status: "SUCCESS",
       message: "Accommodation removed from wishlist",
       wishlist,
     });
@@ -243,9 +247,15 @@ const removeFromWishlist = async (req, res) => {
 const getAccommodationDetailsWithSuggestions = async (req, res) => {
   try {
     const { accommodationId } = req.params;
+    const { userId } = req.body;
     const { radius } = req.query;
-    // Find the accommodation by ID
     const accommodation = await Accommodation.findById(accommodationId);
+    const accommodationWishList = await AccommodationsWishlistModel.find({
+      userId,
+    });
+    const accommodationIds = accommodationWishList.flatMap(
+      (wishList) => wishList.accommodations
+    );
 
     if (!accommodation) {
       return res.status(404).json({ message: "Accommodation not found" });
@@ -262,7 +272,11 @@ const getAccommodationDetailsWithSuggestions = async (req, res) => {
       _id: { $ne: accommodationId }, // Exclude the current accommodation
     });
 
-    res.status(200).json({ accommodation, suggestions: nearbyAccommodations });
+    res.status(200).json({
+      accommodation,
+      suggestions: nearbyAccommodations,
+      accommodationIds,
+    });
   } catch (error) {
     console.error("Error fetching nearby accommodations:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -273,8 +287,6 @@ const getAccommodationDetailsWithSuggestions = async (req, res) => {
 const createAppointment = async (req, res) => {
   try {
     const { userId, accommodationId, date, time } = req.body;
-
-    // Check for required fields
     if (!userId || !accommodationId || !date || !time) {
       return res.status(400).json({ message: "All fields are required." });
     }

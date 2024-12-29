@@ -17,7 +17,12 @@ import {
 import homeImg from "/images/home.png";
 import homeNextImg from "/images/homeCard.jpg";
 import homeCard from "/images/homeCard.jpg";
-import { BookingForm, ListingCard } from "@/components/custom";
+import {
+  BookingForm,
+  ListingCard,
+  SkeletonCard,
+  Spinner,
+} from "@/components/custom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,134 +34,81 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useParams } from "react-router-dom";
+import {
+  getAccommodation,
+  removeWishlistAccommodation,
+  wishlistAccommodation,
+} from "@/apiService.js/accommodation";
+import { FaHeart } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { scrollToTop } from "@/utils/scroll";
 
 const AccommodationView = () => {
   const [selectedImage, setSelectedImage] = useState(0);
-  const [showAllAmenities, setShowAllAmenities] = useState(false);
+  const [wishListAccommodationIds, setAccommodationIds] = useState([]);
+  const [propertie, setPropertie] = useState();
+  const [suggestions, setSuggestions] = useState();
+  const { id } = useParams();
+  const [toggleWishlist, setToggleWishlist] = useState();
+  const [loading, setLoading] = useState(false);
 
-  const images = [homeNextImg, homeImg, homeNextImg, homeImg];
+  const fetchAccommodationDetails = async () => {
+    setLoading(true);
+    const response = await getAccommodation(id);
+    setPropertie(response.accommodation);
+    setSuggestions(response.suggestions);
+    setAccommodationIds(response.accommodationIds);
+    setLoading(false);
+  };
+  const handleWishList = async (e) => {
+    e.preventDefault();
+    setToggleWishlist(true);
+    const response = await wishlistAccommodation(propertie?._id);
+    if (response.status !== "SUCCESS") {
+      toast.error(response.message);
+    } else {
+      toast.success(response.message);
+    }
+  };
+  const handleRemoveWishList = async (e) => {
+    e.preventDefault();
+    setToggleWishlist(false);
+    const response = await removeWishlistAccommodation(propertie?._id);
+    if (response.status !== "SUCCESS") {
+      toast.error(response.message);
+    } else {
+      toast.success(response.message);
+    }
+  };
+  useEffect(() => {
+    scrollToTop();
+    wishListAccommodationIds.includes(propertie?._id)
+      ? setToggleWishlist(true)
+      : setToggleWishlist(false);
+    fetchAccommodationDetails();
+  }, [id]);
 
-  const properties = [
-    {
-      id: 1,
-      imageUrl: homeCard,
-      title: "The People's Brownstone",
-      location: "1993 Broadway, New York",
-      roommates: 2,
-      price: 3000,
-      reviews: 7,
-      amenities: ["WiFi", "Air conditioning", "Kitchen", "Heating", "Smokers"],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-  ];
-
-  const amenities = [
-    { icon: <Wifi className="w-5 h-5" />, name: "High-speed WiFi" },
-    { icon: <Car className="w-5 h-5" />, name: "Free parking" },
-    { icon: <Tv className="w-5 h-5" />, name: "Smart TV" },
-    { icon: <Coffee className="w-5 h-5" />, name: "Coffee maker" },
-    {
-      icon: <UtensilsCrossed className="w-5 h-5" />,
-      name: "Fully equipped kitchen",
-    },
-    { icon: <Wind className="w-5 h-5" />, name: "Air conditioning" },
-    { icon: <PawPrint className="w-5 h-5" />, name: "Pet friendly" },
-    { icon: <Users className="w-5 h-5" />, name: "Up to 4 guests" },
-  ];
-
-  return (
+  return loading ? (
     <div className="container mx-auto lg:px-32 px-4 py-8">
-      {/* Header Section */}
+      <div className="p-3">
+        <SkeletonCard />
+      </div>
+      <Spinner />
+    </div>
+  ) : (
+    <div className="container mx-auto lg:px-32 px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            Luxury Downtown Apartment
+            {propertie?.title}
           </h1>
           <div className="flex items-center gap-2 mt-2 text-gray-600">
             <MapPin className="w-5 h-5" />
-            <span>123 Main Street, New York, NY 10001</span>
+            <span>
+              {propertie?.address.street},{propertie?.address.state},
+              {propertie?.address.city},{propertie?.address.country}
+            </span>
           </div>
         </div>
         <div className="flex gap-4 mt-4 md:mt-0">
@@ -164,24 +116,33 @@ const AccommodationView = () => {
             <Share2 className="w-5 h-5" />
             Share
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
-            <Heart className="w-5 h-5" />
-            Save
-          </button>
+          {toggleWishlist ? (
+            <button
+              className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50"
+              onClick={handleRemoveWishList}
+            >
+              <FaHeart className="w-5 h-5 text-red-600" />
+            </button>
+          ) : (
+            <button
+              className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50"
+              onClick={handleWishList}
+            >
+              <Heart className="w-5 h-5 text-gray-400 " />
+            </button>
+          )}
         </div>
       </div>
-
-      {/* Image Gallery */}
       <div className="mb-8">
         <div className="relative h-[400px] md:h-[500px] mb-4 rounded-xl overflow-hidden">
           <img
-            src={images[selectedImage]}
+            src={propertie?.images[selectedImage]}
             alt={`View ${selectedImage + 1}`}
             className="w-full h-full object-cover"
           />
         </div>
         <div className="grid grid-cols-4 gap-4">
-          {images.map((image, index) => (
+          {propertie?.images.map((image, index) => (
             <button
               key={index}
               onClick={() => setSelectedImage(index)}
@@ -198,66 +159,31 @@ const AccommodationView = () => {
           ))}
         </div>
       </div>
-
-      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Details */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Overview */}
           <section>
             <h2 className="text-2xl font-semibold mb-4">Overview</h2>
             <p className="text-gray-600 leading-relaxed">
-              Experience luxury living in this stunning downtown apartment.
-              Perfect for both short and long-term stays, this beautifully
-              furnished space offers modern amenities and breathtaking city
-              views. With its prime location, you'll be steps away from
-              restaurants, shopping, and public transportation.
+              {propertie?.description}
             </p>
           </section>
-
-          {/* Amenities */}
           <section>
             <h2 className="text-2xl font-semibold mb-4">Amenities</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {(showAllAmenities ? amenities : amenities.slice(0, 6)).map(
-                (amenity, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
-                  >
-                    {amenity.icon}
-                    <span className="text-gray-700">{amenity.name}</span>
-                  </div>
-                )
-              )}
+            <div className="grid grid-cols-2 md:grid-cols-6 items-center gap-4">
+              {propertie?.amenities.map((amenity, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 bg-gray-200 rounded-lg"
+                >
+                  <span className="text-gray-700 ">{amenity}</span>
+                </div>
+              ))}
             </div>
-            {amenities.length > 6 && (
-              <button
-                onClick={() => setShowAllAmenities(!showAllAmenities)}
-                className="mt-4 text-blue-600 hover:text-blue-700"
-              >
-                {showAllAmenities ? "Show less" : "Show all amenities"}
-              </button>
-            )}
           </section>
-
-          {/* Description */}
           <section>
             <h2 className="text-2xl font-semibold mb-4">Description</h2>
             <div className="space-y-4 text-gray-600">
-              <p>
-                Welcome to your urban oasis! This newly renovated apartment
-                combines modern comfort with classic New York charm. The
-                open-concept living space features floor-to-ceiling windows that
-                flood the room with natural light and offer stunning city views.
-              </p>
-              <p>
-                The fully equipped kitchen includes stainless steel appliances,
-                quartz countertops, and everything you need to prepare meals at
-                home. The spacious bedroom features a comfortable queen-size bed
-                with premium linens and blackout curtains for a perfect night's
-                sleep.
-              </p>
+              <p> {propertie?.description}</p>
               <p>
                 The building offers 24/7 security, a fitness center, and a
                 rooftop terrace perfect for enjoying sunset views over the city
@@ -266,8 +192,6 @@ const AccommodationView = () => {
             </div>
           </section>
         </div>
-
-        {/* Right Column - Booking Card */}
         <div className="lg:col-span-1">
           <div className="sticky top-8">
             <div className="bg-white rounded-xl shadow-lg p-6 border">
@@ -292,9 +216,12 @@ const AccommodationView = () => {
                     </DialogHeader>
                   </DialogContent>
                 </Dialog>
-                <button className="w-full border-2 border-blue-600 text-blue-600 py-3 px-4 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
+                <button
+                  className="w-full border-2 border-blue-600 text-blue-600 py-3 px-4 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+                  onClick={handleWishList}
+                >
                   <Heart className="w-5 h-5" />
-                  Add to Wishlist
+                  {toggleWishlist ? "Remove From Wishlist" : " Add to Wishlist"}
                 </button>
 
                 <button className="w-full border py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
@@ -323,8 +250,12 @@ const AccommodationView = () => {
         <h1 className="text-2xl font-bold">Check Out Similar</h1>
       </div>
       <div className="space-y-4">
-        {properties.map((property) => (
-          <ListingCard key={property.id} property={property} />
+        {suggestions?.map((property) => (
+          <ListingCard
+            key={property.id}
+            property={property}
+            wishListAccommodationIds={wishListAccommodationIds}
+          />
         ))}
       </div>
     </div>

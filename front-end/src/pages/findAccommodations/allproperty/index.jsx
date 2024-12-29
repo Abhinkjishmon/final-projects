@@ -1,199 +1,69 @@
 import React, { useEffect, useState } from "react";
-import {
-  Heart,
-  Grid,
-  List,
-  MapPin,
-  Plus,
-  Minus,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import homeCard from "/images/homeCard.jpg";
-import map from "/images/map.png";
-import { ListingCard } from "@/components/custom";
+import { ListingCard, Map, SkeletonCard, Spinner } from "@/components/custom";
 import { scrollToTop } from "@/utils/scroll";
-
-const MapView = () => {
-  return (
-    <div className="relative h-full min-h-[600px] bg-gray-100 rounded-lg">
-      <img
-        src={map}
-        alt="Map"
-        className="w-full h-full object-cover rounded-xl"
-      />
-      <div className="absolute top-4 right-4 bg-white rounded-lg shadow">
-        <button className="p-2 hover:bg-gray-100 border-b">
-          <Plus className="w-5 h-5" />
-        </button>
-        <button className="p-2 hover:bg-gray-100">
-          <Minus className="w-5 h-5" />
-        </button>
-      </div>
-    </div>
-  );
-};
+import { getAllAccommodation } from "@/apiService.js/accommodation";
 
 const AllProperty = () => {
-  const [viewMode, setViewMode] = useState("grid");
-  const [showRoommates, setShowRoommates] = useState(false);
+  const [propertie, setpropertie] = useState([]);
+  const [wishListAccommodationIds, setAccommodationIds] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loctionsDetails, setLocationsDetails] = useState([]);
 
-  const properties = [
-    {
-      id: 1,
-      imageUrl: homeCard,
-      title: "The People's Brownstone",
-      location: "1993 Broadway, New York",
-      roommates: 2,
-      price: 3000,
-      reviews: 7,
-      amenities: ["WiFi", "Air conditioning", "Kitchen", "Heating", "Smokers"],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-    {
-      id: 2,
-      imageUrl: homeCard,
-      title: "Lovely room in Manhattan",
-      location: "246 West St, New York",
-      roommates: 3,
-      price: 2440,
-      reviews: 14,
-      amenities: [
-        "WiFi",
-        "Air conditioning",
-        "Kitchen",
-        "Recycling",
-        "Non-smoking",
-      ],
-    },
-  ];
-
+  const fetchAllAccommodation = async () => {
+    setLoading(true);
+    const response = await getAllAccommodation();
+    setpropertie(response.accommodations);
+    setAccommodationIds(response.accommodationIds);
+    const locations = response.accommodations?.map((item, index) => ({
+      id: index + 1,
+      name: item.title,
+      description: `${item.description}, located at ${item.address.street}, ${item.address.city}, ${item.address.state}, ${item.address.zipCode}, ${item.address.country}`,
+      coordinates: item.location.coordinates,
+    }));
+    setLocationsDetails(locations);
+    setLoading(false);
+  };
   useEffect(() => {
     scrollToTop();
+    fetchAllAccommodation();
   }, []);
-  return (
+  return loading ? (
+    <div className="container mx-auto lg:px-32 px-4 py-8">
+      <div className="p-3">
+        <SkeletonCard />
+      </div>
+      <Spinner />
+    </div>
+  ) : (
     <div className="container mx-auto px-4 py-6">
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Left Column - Listings */}
         <div className="lg:w-1/2 space-y-4 h-screen overflow-y-auto scroll-bar">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold">
               Apartments in New York
               <span className="text-sm font-normal text-gray-500 ml-2">
-                1248 results • Jul 14 - 21
+                {propertie.length} results
               </span>
             </h1>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex gap-2">
-              <button className="px-3 py-1.5 border rounded-full text-sm hover:bg-gray-50">
-                Price
-              </button>
-              <button className="px-3 py-1.5 border rounded-full text-sm hover:bg-gray-50">
-                Apartment
-              </button>
-              <button className="px-3 py-1.5 border rounded-full text-sm hover:bg-gray-50">
-                Floor
-              </button>
-              <button className="px-3 py-1.5 border rounded-full text-sm hover:bg-gray-50">
-                More
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2 ml-auto">
-              <button
-                className={`p-2 rounded ${
-                  viewMode === "grid" ? "bg-gray-100" : ""
-                }`}
-                onClick={() => setViewMode("grid")}
-              >
-                <Grid className="w-5 h-5" />
-              </button>
-              <button
-                className={`p-2 rounded ${
-                  viewMode === "list" ? "bg-gray-100" : ""
-                }`}
-                onClick={() => setViewMode("list")}
-              >
-                <List className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
           <div className="space-y-4">
-            {properties.map((property) => (
-              <ListingCard key={property.id} property={property} />
-            ))}
+            {propertie
+              .slice()
+              .reverse()
+              .map((property) => {
+                return (
+                  <ListingCard
+                    key={property._id}
+                    property={property}
+                    wishListAccommodationIds={wishListAccommodationIds}
+                  />
+                );
+              })}
           </div>
         </div>
-
-        {/* Right Column - Map */}
         <div className="lg:w-1/2 rounded-xl">
-          <MapView />
+          <Map locations={loctionsDetails} />
         </div>
       </div>
     </div>

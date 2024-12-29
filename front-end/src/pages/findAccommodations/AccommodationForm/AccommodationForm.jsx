@@ -1,22 +1,15 @@
 import React, { useState } from "react";
-import { Home, MapPin, DollarSign } from "lucide-react";
+import BasicInformation from "./BasicInformation";
+import AddressSection from "./AddressSection";
+import PropertyDetails from "./PropertyDetails";
+import { createNewAccommodation } from "@/apiService.js/accommodation";
+import { handleCompressAndAppendImages } from "@/utils/compressFile";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-import { ImageUploadProps } from "@/components/custom";
-
-const FURNISHING_OPTIONS = ["fully furnished", "semi-furnished", "unfurnished"];
-const AMENITIES_OPTIONS = [
-  "WiFi",
-  "Parking",
-  "Air Conditioning",
-  "Heating",
-  "Laundry",
-  "Security System",
-  "Kitchen",
-  "TV",
-];
-
-function AccommodationForm() {
-  const [images, setImages] = useState([]);
+export default function AccommodationForm() {
+  const [loading, setLoading] = useState(false);
+  const naviagate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -26,264 +19,107 @@ function AccommodationForm() {
       state: "",
       zipCode: "",
       country: "",
-      latitude: "",
-      longitude: "",
+      latitude: 0,
+      longitude: 0,
     },
-    rent: "",
+    location: {
+      type: "Point",
+      coordinates: [0, 0],
+    },
+    rent: 0,
     utilitiesIncluded: false,
     roomType: "",
-    furnishing: "",
+    furnishing: "unfurnished",
     amenities: [],
+    images: [],
     availabilityStatus: "available",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name.includes(".")) {
-      const [parent, child] = name.split(".");
-      setFormData((prev) => ({
-        ...prev,
-        [parent]: { ...prev[(parent, [child])] },
-      }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const handleAmenityToggle = (amenity) => {
-    setFormData((prev) => ({
-      ...prev,
-      amenities: prev.amenities.includes(amenity)
-        ? prev.amenities.filter((a) => a !== amenity)
-        : [...prev.amenities, amenity],
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (images.length < 2) {
-      alert("Please upload at least 2 images");
-      return;
+    setLoading(true);
+
+    const updatedFormData = {
+      ...formData,
+      location: {
+        type: "Point",
+        coordinates: [
+          formData.address?.longitude || 0,
+          formData.address?.latitude || 0,
+        ],
+      },
+    };
+
+    const data = new FormData();
+    data.append("title", updatedFormData.title || "");
+    data.append("description", updatedFormData.description || "");
+    data.append("rent", String(updatedFormData.rent || 0));
+    data.append("utilitiesIncluded", String(updatedFormData.utilitiesIncluded));
+    data.append("roomType", updatedFormData.roomType || "");
+    data.append("furnishing", updatedFormData.furnishing || "unfurnished");
+    data.append(
+      "availabilityStatus",
+      updatedFormData.availabilityStatus || "available"
+    );
+    Object.entries(updatedFormData.address || {}).forEach(([key, value]) => {
+      data.append(`address[${key}]`, String(value));
+    });
+
+    data.append("location[type]", updatedFormData.location.type);
+    data.append(
+      "location[coordinates][0]",
+      String(updatedFormData.location.coordinates[0])
+    );
+    data.append(
+      "location[coordinates][1]",
+      String(updatedFormData.location.coordinates[1])
+    );
+    updatedFormData.amenities.forEach((amenity, index) => {
+      data.append(`amenities[${index}]`, amenity);
+    });
+
+    await handleCompressAndAppendImages(updatedFormData.images, data);
+    newAccommodation(formData);
+  };
+
+  const newAccommodation = async (formData) => {
+    const response = await createNewAccommodation(formData);
+    if (response.status !== "SUCCESS") {
+      setLoading(false);
+    } else {
+      setLoading(false);
+      toast.success(response.message);
+      naviagate("/find-accommodations");
     }
-    console.log({ ...formData, images });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-8">
-      <div className="bg-white my-12 rounded-xl shadow-lg p-6 space-y-6">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <Home className="text-blue-600" />
-          List Your Accommodation
-        </h1>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white shadow-lg rounded-lg px-8 py-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Add New Accommodation
+          </h2>
 
-        <div className="space-y-6">
-          <ImageUploadProps images={images} setImages={setImages} />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <BasicInformation formData={formData} setFormData={setFormData} />
+            <AddressSection formData={formData} setFormData={setFormData} />
+            <PropertyDetails formData={formData} setFormData={setFormData} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Title
-              </label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                className="mt-1 border p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Room Type
-              </label>
-              <input
-                type="text"
-                name="roomType"
-                value={formData.roomType}
-                onChange={handleChange}
-                className="mt-1 border p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              rows={4}
-              className="mt-1 border p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Street Address
-              </label>
-              <input
-                type="text"
-                name="address.street"
-                value={formData.address.street}
-                onChange={handleChange}
-                className="mt-1 block border p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                City
-              </label>
-              <input
-                type="text"
-                name="address.city"
-                value={formData.address.city}
-                onChange={handleChange}
-                className="mt-1 block border p-2 w-full rounded-md  border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                State
-              </label>
-              <input
-                type="text"
-                name="address.state"
-                value={formData.address.state}
-                onChange={handleChange}
-                className="mt-1 block border p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                ZIP Code
-              </label>
-              <input
-                type="text"
-                name="address.zipCode"
-                value={formData.address.zipCode}
-                onChange={handleChange}
-                className="mt-1 block border p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Country
-              </label>
-              <input
-                type="text"
-                name="address.country"
-                value={formData.address.country}
-                onChange={handleChange}
-                className="mt-1 block border p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Monthly Rent
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <DollarSign className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="number"
-                  name="rent"
-                  value={formData.rent}
-                  onChange={handleChange}
-                  className="pl-10 block border p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  required
-                />
+            <div className="pt-5">
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                >
+                  {loading ? "Saving..." : "Save Accommodation"}
+                </button>
               </div>
             </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Furnishing Status
-            </label>
-            <select
-              name="furnishing"
-              value={formData.furnishing}
-              onChange={handleChange}
-              className="mt-1  block border p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              required
-            >
-              <option value="">Select furnishing status</option>
-              {FURNISHING_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option.charAt(0).toUpperCase() + option.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Amenities
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {AMENITIES_OPTIONS.map((amenity) => (
-                <label key={amenity} className="inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={formData.amenities.includes(amenity)}
-                    onChange={() => handleAmenityToggle(amenity)}
-                    className="rounded border p-2 border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-sm text-gray-700">{amenity}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="utilitiesIncluded"
-              name="utilitiesIncluded"
-              checked={formData.utilitiesIncluded}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  utilitiesIncluded: e.target.checked,
-                }))
-              }
-              className="rounded border p-2 border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-            <label
-              htmlFor="utilitiesIncluded"
-              className="ml-2 text-sm text-gray-700"
-            >
-              Utilities Included
-            </label>
-          </div>
+          </form>
         </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-        >
-          List Accommodation
-        </button>
       </div>
-    </form>
+    </div>
   );
 }
-
-export default AccommodationForm;

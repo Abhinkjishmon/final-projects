@@ -12,6 +12,18 @@ const accessSecritKey = process.env.ACCESS_SECRIT_KEY;
 const refreshSecritKey = process.env.REFRESH_SECRIT_KEY;
 
 const baseURl = "/api/v1";
+const frontEndURL = process.env.FRONT_END;
+
+const corsOptions = {
+  origin: frontEndURL,
+  credentials: true,
+};
+
+const cloudinaryCred = {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY,
+};
 
 module.exports = {
   PORT,
@@ -19,4 +31,6 @@ module.exports = {
   accessSecritKey,
   refreshSecritKey,
   baseURl,
+  corsOptions,
+  cloudinaryCred,
 };

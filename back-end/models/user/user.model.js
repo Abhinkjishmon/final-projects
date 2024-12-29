@@ -5,25 +5,59 @@ const userSchema = new mongoose.Schema(
   {
     fullname: {
       type: String,
-      required: [true, "Full name is required"],
-      trim: true,
+      required: true,
     },
     username: {
       type: String,
-      required: [true, "Username is required"],
+      required: true,
       unique: true,
-      trim: true,
-      minlength: [3, "Username must be at least 3 characters long"],
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: true,
       unique: true,
-      trim: true,
+    },
+    profileImg: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dxk9a2lqa/image/upload/v1734362486/stw32xpwxgnnhfes32vu.jpg",
+    },
+    coverImg: {
+      type: String,
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: true,
+    },
+    about: {
+      type: String,
+      trim: true,
+    },
+    experience: {
+      type: String,
+      trim: true,
+    },
+    socialMediaLinks: {
+      facebook: {
+        type: String,
+        trim: true,
+      },
+      twitter: {
+        type: String,
+        trim: true,
+      },
+      linkedin: {
+        type: String,
+        trim: true,
+      },
+      instagram: {
+        type: String,
+        trim: true,
+      },
+      youtube: {
+        type: String,
+        trim: true,
+      },
     },
   },
   {

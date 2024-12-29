@@ -1,5 +1,7 @@
 const express = require("express");
 const { isAuthorizedUser } = require("../middleware/verifyjwt");
+const multer = require("multer");
+const upload = multer();
 const {
   addJob,
   addApplication,
@@ -12,16 +14,23 @@ const {
   getJobsByUser,
   updateApplicationStatus,
   getApplicationsForJob,
+  getJobWithSimilarJobs,
+  getFeaturedJobs,
 } = require("../controllers/jobController");
 
 const router = express.Router();
 
 router.post("/new-job", isAuthorizedUser, addJob);
 // Route to add a new application
-router.post("/applications", isAuthorizedUser, addApplication);
+router.post(
+  "/applications/:jobId",
+  upload.none(),
+  isAuthorizedUser,
+  addApplication
+);
 
 // Route to save a job
-router.post("/save", isAuthorizedUser, saveJob);
+router.post("/save/:jobId", isAuthorizedUser, saveJob);
 
 // Route to get all saved jobs for a user
 router.get("/get-saved", isAuthorizedUser, getSavedJobs);
@@ -46,6 +55,8 @@ router.put(
   isAuthorizedUser,
   updateApplicationStatus
 );
+router.get("/:id", isAuthorizedUser, getJobWithSimilarJobs);
+router.post("/featured-jobs", isAuthorizedUser, getFeaturedJobs);
 
 // Route to get all applications for a particular job
 router.get("/applications/:jobId", isAuthorizedUser, getApplicationsForJob);

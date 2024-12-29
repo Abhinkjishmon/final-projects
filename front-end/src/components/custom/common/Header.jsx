@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, X, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const user = useSelector((state) => state.user.user);
 
   const menuItems = [
     { label: "Home", href: "#" },
@@ -17,12 +19,10 @@ function Header() {
     <header className="bg-white shadow-md">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <div className="flex-shrink-0">
             <span className="text-2xl font-bold text-blue-600">Logo</span>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {menuItems.map((item) => (
               <a
@@ -36,26 +36,32 @@ function Header() {
           </div>
 
           {/* Desktop Icons */}
-          {/* <div className="hidden md:flex items-center space-x-4">
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Search className="w-5 h-5 text-gray-600" />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <User className="w-5 h-5 text-gray-600" />
-            </button>
-          </div> */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link to={'/signin'}>
-              <Button
-                variant="outline"
-                className="px-7 py-3 border-black  hover:bg-gray-100 rounded-full"
-              >
-                Log in
-              </Button>
-            </Link>
-          </div>
+          <Link to={`/profile/${user.userId}`}>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-700">{user.username}</span>
+                <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <img
+                    src={user.profileImg}
+                    alt={user.username}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center space-x-4">
+                <Link to={"/signin"}>
+                  <Button
+                    variant="outline"
+                    className="px-7 py-3 border-black  hover:bg-gray-100 rounded-full"
+                  >
+                    Log in
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </Link>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}

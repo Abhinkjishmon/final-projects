@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Star,
   Phone,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import landingImg from "/images/students.png";
 import avathar from "/images/avathar.jpg";
+import { useSelector } from "react-redux";
 
 const FloatingElement = ({ Icon, color, size, position, animation }) => (
   <div className={`absolute ${position} ${animation}`}>
@@ -22,6 +23,11 @@ const FloatingElement = ({ Icon, color, size, position, animation }) => (
 );
 
 function LandingPage() {
+  const user = useSelector((state) => state.user.user);
+  useEffect(() => {
+    console.log(user);
+  }, []);
+
   return (
     <div className=" home bg-gradient-to-br from-white to-blue-50 overflow-hidden">
       <FloatingElement
@@ -58,7 +64,6 @@ function LandingPage() {
         <div className="absolute bottom-0 right-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000" />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center relative">
-
           <div className="space-y-6 sm:space-y-8 order-2 lg:order-1">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy-900 leading-tight">
               Where dreams meet opportunity, we handle the rest for you.
@@ -81,7 +86,6 @@ function LandingPage() {
           </div>
 
           <div className="relative order-1 lg:order-2">
-          
             <div className="rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-300 hover:scale-[1.02]">
               <img
                 src={landingImg}

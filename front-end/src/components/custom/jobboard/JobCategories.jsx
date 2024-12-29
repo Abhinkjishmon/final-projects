@@ -13,20 +13,22 @@ import {
 import { Link } from "react-router-dom";
 
 const CategoryCard = ({ icon: Icon, title, jobCount }) => (
-  <div
-    className={`p-6 rounded-lg border border-gray-200 hover:border-blue-500 hover:text-white hover:bg-blue-500 transition-all cursor-pointer`}
-  >
-    <div className="flex flex-col h-full">
-      <div className="text-blue-600">
-        <Icon size={24} />
-      </div>
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <div className="flex items-center justify-between mt-auto">
-        <span className="text-sm opacity-80">{jobCount} jobs available</span>
-        <ArrowRight size={16} className="opacity-60" />
+  <Link to={`job-lists?category=${title}`}>
+    <div
+      className={`p-6 rounded-lg border border-gray-200 hover:border-blue-500 hover:text-white hover:bg-blue-500 transition-all cursor-pointer`}
+    >
+      <div className="flex flex-col h-full">
+        <div className="text-blue-600">
+          <Icon size={24} />
+        </div>
+        <h3 className="text-lg font-semibold mb-2">{title}</h3>
+        <div className="flex items-center justify-between mt-auto">
+          <span className="text-sm opacity-80">{jobCount} jobs available</span>
+          <ArrowRight size={16} className="opacity-60" />
+        </div>
       </div>
     </div>
-  </div>
+  </Link>
 );
 
 const JobCategories = () => {
@@ -47,7 +49,7 @@ const JobCategories = () => {
         <h2 className="text-2xl font-bold">
           Explore by <span className="text-blue-500">category</span>
         </h2>
-        <Link to={'job-lists'}>
+        <Link to={"job-lists"}>
           <button className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
             Show all jobs
             <ArrowRight size={16} />

@@ -1,22 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MapPin, Link as LinkIcon, Twitter, Github } from "lucide-react";
 
-function ProfileInfo() {
+function ProfileInfo({ profileInfo }) {
   return (
     <div className="max-w-5xl mx-auto my-9 px-4 sm:px-6 lg:px-8">
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">About</h2>
-            <p className="text-gray-600">
-              Passionate software engineer with over 8 years of experience
-              building scalable web applications. Focused on creating elegant
-              solutions to complex problems while maintaining code quality and
-              performance. Strong advocate for clean code and best practices.
-            </p>
+            {profileInfo?.about ? (
+              <p className="text-gray-600">{profileInfo?.about}</p>
+            ) : (
+              <p>No Bio</p>
+            )}
 
             <h2 className="text-xl font-bold text-gray-900 mt-6 mb-4">
-              Experience
+              What I'm Doing
             </h2>
             <div className="space-y-4">
               <div>
@@ -24,11 +23,7 @@ function ProfileInfo() {
                   Senior Software Engineer
                 </h3>
                 <p className="text-gray-600">TechCorp Inc. • 2020 - Present</p>
-                <p className="text-gray-600 mt-2">
-                  Lead development of core platform features and mentored junior
-                  developers. Implemented microservices architecture that
-                  improved system scalability by 300%.
-                </p>
+                <p className="text-gray-600 mt-2">{profileInfo?.experience}</p>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">

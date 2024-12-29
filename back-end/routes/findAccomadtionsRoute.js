@@ -12,11 +12,18 @@ const {
   updateAppointment,
 } = require("../controllers/findAccomadtionsController");
 const { isAuthorizedUser } = require("../middleware/verifyjwt");
+const multer = require("multer");
+const upload = multer();
 
 const router = express.Router();
 
 // Route to create accommodation
-router.post("/new-accommodations", isAuthorizedUser, createAccommodation);
+router.post(
+  "/new-accommodations",
+  upload.none(),
+  isAuthorizedUser,
+  createAccommodation
+);
 router.post(
   "/update-accommodations/:id",
   isAuthorizedUser,
@@ -35,10 +42,14 @@ router.get("/get-all", isAuthorizedUser, getAllAccommodations);
 router.get("/get-one/:id", isAuthorizedUser, getAccommodationById);
 
 // Route to add accommodation to wishlist
-router.post("/wishlist/add", isAuthorizedUser, addToWishlist);
+router.post("/wishlist/add/:accommodationId", isAuthorizedUser, addToWishlist);
 
 // Route to remove accommodation from wishlist
-router.post("/wishlist/remove", isAuthorizedUser, removeFromWishlist);
+router.post(
+  "/wishlist/remove/:accommodationId",
+  isAuthorizedUser,
+  removeFromWishlist
+);
 
 router.get(
   "/get-accommodations/:accommodationId/details",
