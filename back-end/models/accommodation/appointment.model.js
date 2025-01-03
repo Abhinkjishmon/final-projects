@@ -12,25 +12,32 @@ const appointmentSchema = new mongoose.Schema(
       ref: "Accommodation", // Assuming you have an Accommodation model
       required: true,
     },
+    phoneNumber:{
+      type:String,
+      require:true,
+    },
+    specialRequests:{
+      type:String,
+    },
     date: {
       type: Date,
       required: true,
       validate: {
         validator: function (value) {
-          return value >= new Date(); // Ensure date is in the future
+          return value >= new Date();
         },
         message: "Appointment date must be in the future.",
       },
     },
     time: {
-      type: String, // Format HH:mm, e.g., "14:30"
+      type: String,
       required: true,
     },
     status: {
       type: String,
       enum: ["request", "approve", "cancel"],
       required: true,
-      default: "request", // Default status
+      default: "request",
     },
     createdAt: {
       type: Date,
@@ -42,7 +49,7 @@ const appointmentSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 

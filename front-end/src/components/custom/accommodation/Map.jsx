@@ -4,7 +4,6 @@ import "leaflet/dist/leaflet.css";
 import MapMarker from "./MapMarker";
 import { useEffect, useState } from "react";
 
-
 const DEFAULT_ZOOM = 5;
 
 function Map({ locations }) {
@@ -51,9 +50,17 @@ function Map({ locations }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {locations.map((location) => (
-          <MapMarker key={location.id} location={location} />
-        ))}
+        {locations.map((location) => {
+          const [lng, lat] = location.coordinates; // Extract longitude and latitude
+          const correctedCoordinates = [lat, lng]; // Rearrange to [latitude, longitude]
+
+          return (
+            <MapMarker
+              key={location.id}
+              location={{ ...location, coordinates: correctedCoordinates }}
+            />
+          );
+        })}
       </MapContainer>
     </div>
   );

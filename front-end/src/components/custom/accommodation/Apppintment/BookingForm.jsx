@@ -2,22 +2,52 @@ import React, { useState } from "react";
 import { CalendarDays } from "lucide-react";
 import Calendar from "./Calendar";
 import TimeSelect from "./TimeSelect";
+import { takeAppointments } from "@/apiService.js/accommodation";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function BookingForm() {
+  const { id } = useParams();
   const [formData, setFormData] = useState({
-    checkInDate: null,
-    checkInTime: "",
-    checkOutDate: null,
-    checkOutTime: "",
-    guestName: "",
-    email: "",
-    phone: "",
+    date: null,
+    time: null,
+    phoneNumber: "",
     specialRequests: "",
+    accommodationId: id,
   });
 
-  const handleSubmit = (e) => {
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.date) {
+      newErrors.date = "Please select a date.";
+    }
+    if (!formData.time) {
+      newErrors.time = "Please select a time.";
+    }
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "Phone number is required.";
+    } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid 10-digit phone number.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const takeNewAppointments = async () => {
+    const response = await takeAppointments(formData);
+    if (response.status !== "SUCCESS") {
+      toast.error(response.message);
+    } else {
+      toast.success(response.message);
+    }
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    if (validateForm()) {
+      await takeNewAppointments();
+    }
   };
 
   return (
@@ -29,68 +59,51 @@ function BookingForm() {
         <div className="grid gap-6">
           <div className="space-y-4">
             <Calendar
-              selectedDate={formData.checkOutDate}
-              onDateSelect={(date) =>
-                setFormData((prev) => ({ ...prev, checkOutDate: date }))
-              }
+              selectedDate={formData.date}
+              onDateSelect={(date) => {
+                setFormData((prev) => ({ ...prev, date }));
+              }}
               minDate={formData.checkInDate || new Date()}
             />
+            {errors.date && (
+              <p className="text-red-500 text-sm">{errors.date}</p>
+            )}
             <TimeSelect
-              label="Check-out Time"
-              value={formData.checkOutTime}
-              onChange={(time) =>
-                setFormData((prev) => ({ ...prev, checkOutTime: time }))
-              }
+              label="Select time"
+              value={formData.time}
+              onChange={(time) => setFormData((prev) => ({ ...prev, time }))}
               minTime="06:00"
               maxTime="12:00"
             />
+            {errors.time && (
+              <p className="text-red-500 text-sm">{errors.time}</p>
+            )}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Guest Name
-            </label>
-            <input
-              type="text"
-              value={formData.guestName}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, guestName: e.target.value }))
-              }
-              className="mt-1 border p-2  block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, email: e.target.value }))
-              }
-              className="mt-1 border p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block w-full text-sm font-medium text-gray-700">
               Phone
             </label>
             <input
               type="tel"
-              value={formData.phone}
+              value={formData.phoneNumber}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, phone: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  phoneNumber: e.target.value,
+                }))
               }
-              className="mt-1 border p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              required
+              className={`mt-1 border p-2 block w-full rounded-md ${
+                errors.phoneNumber
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-blue-500"
+              }`}
             />
+            {errors.phoneNumber && (
+              <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+            )}
           </div>
 
           <div>
@@ -121,4 +134,5 @@ function BookingForm() {
     </form>
   );
 }
+
 export default BookingForm;

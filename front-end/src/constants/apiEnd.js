@@ -23,6 +23,10 @@ const apiEndpoints = {
       `/accommodation/wishlist/remove/${accommodationId}`,
     getAccommodation: (accommodationId) =>
       `/accommodation/get-accommodations/${accommodationId}/details`,
+    appointments: "/accommodation/appointments",
+  },
+  culturalIntergretion: {
+    newBlogs: "/culturalfit/new-blogs",
   },
 };
 

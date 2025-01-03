@@ -1,7 +1,6 @@
 const express = require("express");
 const {
   createBlog,
-  createCategory,
   updateBlog,
   deleteBlog,
   toggleLike,
@@ -24,11 +23,10 @@ router.put("/update-blog/:blogId", isAuthorizedUser, updateBlog);
 // Route to delete a blog
 router.delete("/delete-blog/:blogId", isAuthorizedUser, deleteBlog);
 
-// Route to create a new category
-router.post("/new-categories", isAuthorizedUser, createCategory);
-
 // Route to toggle like
 router.post("/blogs/:blogId/like", isAuthorizedUser, toggleLike);
+//get all blogs
+router.get("/blogs", isAuthorizedUser, toggleLike);
 
 // Route for getting all events
 router.get("/events", isAuthorizedUser, getAllEvents);
@@ -41,7 +39,5 @@ router.post("/add-event", isAuthorizedUser, addEvent);
 
 // Route for deleting an event (soft delete)
 router.delete("/delete-event/:eventId", isAuthorizedUser, deleteEvent);
-
-
 
 module.exports = router;

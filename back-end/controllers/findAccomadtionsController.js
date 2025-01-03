@@ -286,7 +286,14 @@ const getAccommodationDetailsWithSuggestions = async (req, res) => {
 // Create Appointment
 const createAppointment = async (req, res) => {
   try {
-    const { userId, accommodationId, date, time } = req.body;
+    const {
+      userId,
+      accommodationId,
+      date,
+      time,
+      phoneNumber,
+      specialRequests,
+    } = req.body;
     if (!userId || !accommodationId || !date || !time) {
       return res.status(400).json({ message: "All fields are required." });
     }
@@ -311,6 +318,8 @@ const createAppointment = async (req, res) => {
       accommodationId,
       date,
       time,
+      specialRequests,
+      phoneNumber,
       status: "request",
     });
     await appointment.save();
@@ -321,9 +330,11 @@ const createAppointment = async (req, res) => {
       notificationFor: accommodationId,
     });
     console.log(noti);
-    res
-      .status(201)
-      .json({ message: "Appointment created successfully.", appointment });
+    res.status(201).json({
+      status: "SUCCESS",
+      message: "Appointment created successfully.",
+      appointment,
+    });
   } catch (error) {
     console.error("Error creating appointment:", error);
     res.status(500).json({ message: "Failed to create appointment.", error });

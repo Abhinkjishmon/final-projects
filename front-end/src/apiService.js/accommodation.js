@@ -65,3 +65,17 @@ export const removeWishlistAccommodation = async (accommodationId) => {
     return { status: "FAILD", message };
   }
 };
+export const takeAppointments = async (formData) => {
+  try {
+    const { data } = await axiosInstance.post(
+      apiEndpoints.accommodation.appointments,
+      formData
+    );
+    return data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+    return { status: "FAILD", message };
+  }
+};

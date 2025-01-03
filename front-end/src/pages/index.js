@@ -31,3 +31,7 @@ export { default as Notifications } from "./profile/profilemanage/notifications/
 export { default as ProfileInfo } from "./profile/profilemanage/ProfileInfo";
 export { default as ApplicationsManager } from "./profile/profilemanage/jobs/ApplicationsManager";
 export { default as EditProfile } from "./profile/profilemanage/EditProfile";
+export { default as CreateBlog } from "./culturalIntegration/blogs/CreateBlog";
+export { default as EducationPage } from "./culturalIntegration/EducationPage";
+export { default as BlogReadPage } from "./culturalIntegration/blogs/BlogReadPage";
+export { default as Healthcare } from "./culturalIntegration/Healthcare";

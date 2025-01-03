@@ -12,14 +12,18 @@ import {
   AllProperty,
   ApplicationsManager,
   Assignments,
+  BlogReadPage,
   Blogs,
   Chats,
   ClassRoom,
   ClassRoomInfo,
+  CreateBlog,
   CulturalIntergretion,
   DailyTask,
   DreamHomeLanding,
   EditProfile,
+  EducationPage,
+  Healthcare,
   Home,
   Jobboard,
   JobDescriptionPage,
@@ -39,8 +43,6 @@ import { Footer, Header, ProtectedRoute } from "./components/custom";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
-
-
 
 const route = createBrowserRouter([
   {
@@ -253,6 +255,22 @@ const route = createBrowserRouter([
       {
         path: "",
         element: <CulturalIntergretion />,
+      },
+      {
+        path: "create-blog",
+        element: <CreateBlog />,
+      },
+      {
+        path: "education",
+        element: <EducationPage />,
+      },
+      {
+        path: "education/view-blog",
+        element: <BlogReadPage />,
+      },
+      {
+        path: "healthcare",
+        element: <Healthcare />,
       },
     ],
   },

@@ -1,35 +1,16 @@
 import React, { useEffect, useState } from "react";
-import {
-  Heart,
-  Share2,
-  MapPin,
-  Wifi,
-  Car,
-  Tv,
-  Coffee,
-  UtensilsCrossed,
-  Wind,
-  PawPrint,
-  Users,
-  Calendar,
-  Mail,
-} from "lucide-react";
-import homeImg from "/images/home.png";
-import homeNextImg from "/images/homeCard.jpg";
-import homeCard from "/images/homeCard.jpg";
+import { Heart, Share2, MapPin, Users, Calendar, Mail } from "lucide-react";
 import {
   BookingForm,
   ListingCard,
+  Map,
   SkeletonCard,
   Spinner,
 } from "@/components/custom";
-
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -52,6 +33,7 @@ const AccommodationView = () => {
   const { id } = useParams();
   const [toggleWishlist, setToggleWishlist] = useState();
   const [loading, setLoading] = useState(false);
+  const [loctionsDetails, setLocationsDetails] = useState([]);
 
   const fetchAccommodationDetails = async () => {
     setLoading(true);
@@ -59,6 +41,13 @@ const AccommodationView = () => {
     setPropertie(response.accommodation);
     setSuggestions(response.suggestions);
     setAccommodationIds(response.accommodationIds);
+    const locations = {
+      id: response.accommodation._id,
+      name: response.accommodation.title,
+      description: `${response.accommodation.description}, located at ${response.accommodation.address.street}, ${response.accommodation.address.city}, ${response.accommodation.address.state}, ${response.accommodation.address.zipCode}, ${response.accommodation.address.country}`,
+      coordinates: response.accommodation.location.coordinates,
+    };
+    setLocationsDetails([locations]);
     setLoading(false);
   };
   const handleWishList = async (e) => {
@@ -195,11 +184,6 @@ const AccommodationView = () => {
         <div className="lg:col-span-1">
           <div className="sticky top-8">
             <div className="bg-white rounded-xl shadow-lg p-6 border">
-              <div className="mb-6">
-                <div className="text-3xl font-bold text-gray-900">$250</div>
-                <div className="text-gray-500">per night</div>
-              </div>
-
               <div className="space-y-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -245,6 +229,9 @@ const AccommodationView = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <Map locations={loctionsDetails} />
       </div>
       <div className="w-full py-12">
         <h1 className="text-2xl font-bold">Check Out Similar</h1>

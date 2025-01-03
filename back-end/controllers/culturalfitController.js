@@ -5,36 +5,32 @@ const User = require("../models/user/user.model");
 // Create a new blog
 const createBlog = async (req, res) => {
   try {
-    const { title, content, userId, categoryIds, coverImage, published } =
-      req.body;
+    const { title, category, content, userId } = req.body;
 
     // Validate required fields
-    if (!title || !content || !userId) {
+    if (!title || !content || !category) {
       return res
         .status(400)
-        .json({ message: "Title, content, and author are required." });
+        .json({ message: "Title, content, and category are required." });
     }
 
-    // Validate category IDs if provided
-    if (categoryIds && categoryIds.length > 0) {
-      const categoriesExist = await Category.find({
-        _id: { $in: categoryIds },
-      });
-      if (categoriesExist.length !== categoryIds.length) {
-        return res
-          .status(404)
-          .json({ message: "One or more categories not found." });
-      }
-    }
+    // Calculate content block statistics
+    const contentBlockCount = content.length;
+    const textBlocks = content.filter((block) => block.type === "text").length;
+    const imageBlocks = content.filter(
+      (block) => block.type === "image"
+    ).length;
 
     // Create a new blog instance
     const newBlog = new Blog({
       title,
+      category,
       content,
+      createdAt: new Date(),
+      contentBlockCount,
+      textBlocks,
+      imageBlocks,
       author: userId,
-      categories: categoryIds || [],
-      coverImage: coverImage || "",
-      published: published || false,
     });
 
     // Save the blog to the database
@@ -80,6 +76,33 @@ const updateBlog = async (req, res) => {
   }
 };
 
+const getBlogs = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    let query = {};
+    if (category) {
+      query.category = category;
+    }
+
+    const blogs = await Blog.find(query)
+      .populate({
+        path: "author",
+        select: "-password",
+      })
+      .exec();
+
+    if (blogs.length === 0) {
+      return res.status(404).json({ message: "No blogs found." });
+    }
+
+    res.status(200).json({ message: "Blogs retrieved successfully.", blogs });
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+
 // Delete a blog
 const deleteBlog = async (req, res) => {
   try {
@@ -101,43 +124,6 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-// Create a new category
-const createCategory = async (req, res) => {
-  try {
-    const { name, description } = req.body;
-
-    // Validate required fields
-    if (!name) {
-      return res.status(400).json({ message: "Category name is required." });
-    }
-
-    // Check if the category already exists
-    const existingCategory = await Category.findOne({ name });
-    if (existingCategory) {
-      return res
-        .status(409)
-        .json({ message: "Category with this name already exists." });
-    }
-
-    // Create a new category instance
-    const newCategory = new Category({
-      name,
-      description: description || "",
-    });
-
-    // Save the category to the database
-    const savedCategory = await newCategory.save();
-
-    res.status(201).json({
-      message: "Category created successfully.",
-      category: savedCategory,
-    });
-  } catch (error) {
-    console.error("Error creating category:", error);
-    res.status(500).json({ message: "Server error. Please try again later." });
-  }
-};
-
 // like blog
 const toggleLike = async (req, res) => {
   try {
@@ -155,7 +141,7 @@ const toggleLike = async (req, res) => {
 
     // Ensure the comparison is consistent by converting IDs to strings
     const alreadyLiked = blog.likes.some((id) => id.toString() === userId);
-    
+
     if (alreadyLiked) {
       // Remove the user from the likes array
       blog.likes = blog.likes.filter((id) => id.toString() !== userId);
@@ -181,8 +167,8 @@ const toggleLike = async (req, res) => {
 
 module.exports = {
   createBlog,
-  createCategory,
   updateBlog,
   deleteBlog,
   toggleLike,
+  getBlogs,
 };
