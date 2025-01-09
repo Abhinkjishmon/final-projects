@@ -1,6 +1,6 @@
 import React from "react";
 
-const AuthorInfo = ({ name, image, date, readTime }) => {
+const AuthorInfo = ({ name, image, date }) => {
   return (
     <div className="flex items-center space-x-4 mb-8">
       <img
@@ -12,11 +12,10 @@ const AuthorInfo = ({ name, image, date, readTime }) => {
         <h3 className="font-medium text-gray-900">{name}</h3>
         <div className="text-sm text-gray-500">
           <span>{date}</span>
-          <span className="mx-2">•</span>
-          <span>{readTime}</span>
         </div>
       </div>
     </div>
+    
   );
 };
 

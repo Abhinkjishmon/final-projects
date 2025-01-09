@@ -27,6 +27,9 @@ const apiEndpoints = {
   },
   culturalIntergretion: {
     newBlogs: "/culturalfit/new-blogs",
+    getBlogs: (category) => `/culturalfit/blogs?category=${category}`,
+    getOneBlogs: (id) => `/culturalfit/blogs/${id}`,
+    getFeaturedBlogs: `/culturalfit/featured-blogs`,
   },
 };
 

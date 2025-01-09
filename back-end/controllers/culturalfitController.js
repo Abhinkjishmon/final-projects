@@ -75,7 +75,7 @@ const updateBlog = async (req, res) => {
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 };
-
+// get category vise blogs
 const getBlogs = async (req, res) => {
   try {
     const { category } = req.query;
@@ -99,6 +99,73 @@ const getBlogs = async (req, res) => {
     res.status(200).json({ message: "Blogs retrieved successfully.", blogs });
   } catch (error) {
     console.error("Error fetching blogs:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+// get one blogs
+const getOneBlogs = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const blogs = await Blog.findOne({ _id: id })
+      .populate({
+        path: "author",
+        select: "-password",
+      })
+      .exec();
+    const category = blogs.category;
+    const relatedBlogs = await Blog.find({ category: category })
+      .populate({
+        path: "author",
+        select: "-password",
+      })
+      .limit(4)
+      .exec();
+    if (blogs.length === 0) {
+      return res.status(404).json({ message: "No blogs found." });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Blogs retrieved successfully.", blogs, relatedBlogs });
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+// get featured blogs
+const getFeaturedBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.aggregate([
+      {
+        $sample: { size: 8 },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: "$author",
+      },
+      {
+        $project: {
+          "author.password": 0,
+        },
+      },
+    ]);
+
+    if (blogs.length === 0) {
+      return res.status(404).json({ message: "No blogs found." });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Featured blogs retrieved successfully.", blogs });
+  } catch (error) {
+    console.error("Error fetching Featured blogs:", error);
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 };
@@ -171,4 +238,6 @@ module.exports = {
   deleteBlog,
   toggleLike,
   getBlogs,
+  getOneBlogs,
+  getFeaturedBlogs,
 };

@@ -1,3 +1,4 @@
+import { getBlogsByCategory } from "@/apiService.js/culturalfit.service";
 import {
   BasicsSection,
   BlogCard,
@@ -8,37 +9,22 @@ import {
 } from "@/components/custom";
 import AccessGuideSection from "@/components/custom/culturalIntegration/healthcare/AccessGuideSection";
 import WomensHealthSection from "@/components/custom/culturalIntegration/healthcare/WomensHealthSection";
-import React from "react";
+import { scrollToTop } from "@/utils/scroll";
+import React, { useEffect, useState } from "react";
 const Healthcare = () => {
-  const blogs = [
-    {
-      title: "The Future of NHS Digital Transformation",
-      excerpt:
-        "Exploring how digital technologies are revolutionizing healthcare delivery in the UK...",
-      image:
-        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      date: "March 15, 2024",
-      author: "Dr. Sarah Johnson",
-    },
-    {
-      title: "Mental Health Services in Post-Pandemic UK",
-      excerpt:
-        "Analysis of how mental health services have evolved since the pandemic...",
-      image:
-        "https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      date: "March 12, 2024",
-      author: "James Wilson",
-    },
-    {
-      title: "Innovation in UK Healthcare",
-      excerpt:
-        "Latest developments in medical research and healthcare innovation across the UK...",
-      image:
-        "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      date: "March 10, 2024",
-      author: "Emma Thompson",
-    },
-  ];
+
+  const [blogs, setBlogs] = useState([]);
+  const fetchBlogs = async () => {
+    const response = await getBlogsByCategory("Healthcare");
+    if (response.blogs) {
+      setBlogs(response.blogs);
+    }
+  };
+
+  useEffect(() => {
+    scrollToTop();
+    fetchBlogs();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -55,8 +41,14 @@ const Healthcare = () => {
           Latest Healthcare Insights
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogs.map((blog, index) => (
-            <BlogCard key={index} post={blog} />
+          {blogs?.map((post, index) => (
+            <BlogCard
+              key={index}
+              title={post.title}
+              content={post.content}
+              author={post.author}
+              postDetails={post}
+            />
           ))}
         </div>
       </div>

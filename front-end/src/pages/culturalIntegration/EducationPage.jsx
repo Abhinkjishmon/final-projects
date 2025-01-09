@@ -1,12 +1,27 @@
+import { getBlogsByCategory } from "@/apiService.js/culturalfit.service";
 import {
   AcademicExcellence,
   BlogSection,
   CulturalIntegration,
   EducationalHeritage,
 } from "@/components/custom";
-import React from "react";
+import { scrollToTop } from "@/utils/scroll";
+import React, { useEffect, useState } from "react";
 
 const EducationPage = () => {
+  const [blogs, setBlogs] = useState([]);
+  const fetchBlogs = async () => {
+    const response = await getBlogsByCategory("Education");
+    if (response.blogs) {
+      setBlogs(response.blogs);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlogs();
+    scrollToTop();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="relative h-[400px]">
@@ -27,7 +42,11 @@ const EducationPage = () => {
       <div className="max-w-6xl mx-auto px-4 py-12">
         <EducationalHeritage />
         <CulturalIntegration />
-        <BlogSection />
+        {blogs.length === 0 ? (
+          <h1>No blogs found</h1>
+        ) : (
+          <BlogSection blogs={blogs} />
+        )}
         <AcademicExcellence />
       </div>
     </div>

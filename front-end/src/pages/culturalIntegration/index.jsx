@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import culturalIntegrationimg from "/images/culturalIntegration.png";
 import {
   EditorsPicks,
@@ -9,16 +9,26 @@ import {
   NewsletterSignup,
 } from "@/components/custom";
 import { scrollToTop } from "@/utils/scroll";
+import { getFeaturedBlogs } from "@/apiService.js/culturalfit.service";
 
 function CulturalIntergretion() {
-useEffect(() => {
+  const [explorePageBlogs, setExplorePageBlogs] = useState([]);
+  const [editorPageBlogs, setEditorPageBlogs] = useState([]);
+  const fetchFeaturedBlogs = async () => {
+    const response = await getFeaturedBlogs();
+    if (response.blogs) {
+      setExplorePageBlogs(response.blogs.slice(0,4));
+      setEditorPageBlogs(response.blogs.slice(4));
+    }
+  };
+  useEffect(() => {
     scrollToTop();
+    fetchFeaturedBlogs();
   }, []);
-  
+
   return (
     <>
       <div className="min-h-screen flex flex-col md:flex-row items-center bg-gray-50 px-6 md:px-20 py-10">
-        {/* Text Section */}
         <div className="flex-1 text-center md:text-left mb-10 md:mb-0">
           <h1 className="text-4xl md:text-6xl font-bold text-black leading-tight">
             START YOUR JOURNEY
@@ -54,9 +64,9 @@ useEffect(() => {
         </div>
       </div>
       <ExpatGuides />
-      <ExplorePage />
+      <ExplorePage explorePageBlogs={explorePageBlogs} />
       <ExpatTools />
-      <EditorsPicks />
+      <EditorsPicks editorPageBlogs={editorPageBlogs} />
       <NewsletterSignup />
       <FaqSection />
     </>

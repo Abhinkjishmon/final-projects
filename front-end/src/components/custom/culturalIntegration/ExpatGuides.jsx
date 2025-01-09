@@ -22,7 +22,7 @@ const ExpatGuides = () => {
     {
       icon: <FaMoneyBillAlt size={32} />,
       title: "Finance",
-      path: "/culturalIntergretion/education",
+      path: "/culturalIntergretion/finance",
     },
     {
       icon: <FaHeartbeat size={32} />,
@@ -32,33 +32,18 @@ const ExpatGuides = () => {
     {
       icon: <FaHome size={32} />,
       title: "Housing",
-      path: "/culturalIntergretion/education",
+      path: "/culturalIntergretion/housing",
     },
     {
       icon: <FaUserFriends size={32} />,
       title: "Lifestyle",
-      path: "/culturalIntergretion/education",
+      path: "/culturalIntergretion/lifestyle",
     },
     {
       icon: <FaCar size={32} />,
       title: "Living",
-      path: "/culturalIntergretion/education",
-    },
-    {
-      icon: <FaTruck size={32} />,
-      title: "Moving",
-      path: "/culturalIntergretion/education",
-    },
-    {
-      icon: <FaBriefcase size={32} />,
-      title: "Working",
-      path: "/culturalIntergretion/education",
-    },
-    {
-      icon: <FaAddressBook size={32} />,
-      title: "Directory",
-      path: "/culturalIntergretion/education",
-    },
+      path: "/culturalIntergretion/living",
+    }
   ];
 
   return (

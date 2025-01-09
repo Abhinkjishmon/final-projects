@@ -4,6 +4,9 @@ const {
   updateBlog,
   deleteBlog,
   toggleLike,
+  getBlogs,
+  getOneBlogs,
+  getFeaturedBlogs,
 } = require("../controllers/culturalfitController");
 const { isAuthorizedUser } = require("../middleware/verifyjwt");
 const {
@@ -17,6 +20,12 @@ const router = express.Router();
 
 // Route to create a new blog
 router.post("/new-blogs", isAuthorizedUser, createBlog);
+// get Blogs
+router.get("/blogs", isAuthorizedUser, getBlogs);
+// get one blog
+router.get("/blogs/:id", isAuthorizedUser, getOneBlogs);
+//get FeaturedBlogs
+router.get("/featured-blogs", isAuthorizedUser, getFeaturedBlogs);
 // Route to update a blog
 router.put("/update-blog/:blogId", isAuthorizedUser, updateBlog);
 

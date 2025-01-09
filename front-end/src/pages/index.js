@@ -35,3 +35,7 @@ export { default as CreateBlog } from "./culturalIntegration/blogs/CreateBlog";
 export { default as EducationPage } from "./culturalIntegration/EducationPage";
 export { default as BlogReadPage } from "./culturalIntegration/blogs/BlogReadPage";
 export { default as Healthcare } from "./culturalIntegration/Healthcare";
+export { default as Finance } from "./culturalIntegration/Finance";
+export { default as Lifestyle } from "./culturalIntegration/Lifestyle";
+export { default as Housing } from "./culturalIntegration/Housing";
+export { default as Living } from "./culturalIntegration/Living";
