@@ -4,7 +4,6 @@ const { INTERNAL_SERVER_ERROR } = require("./statusCode");
 const cloudinary = require("cloudinary").v2;
 
 const uploadFiletoCloudinary = async (filePath) => {
-  console.log(filePath)
   const upload = await cloudinary.uploader.upload(filePath);
   if (!upload)
     throw new AppError(

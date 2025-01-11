@@ -39,3 +39,8 @@ export { default as Finance } from "./culturalIntegration/Finance";
 export { default as Lifestyle } from "./culturalIntegration/Lifestyle";
 export { default as Housing } from "./culturalIntegration/Housing";
 export { default as Living } from "./culturalIntegration/Living";
+export { default as ViewAllEventNotice } from "./culturalIntegration/ViewAllEventNotice";
+export { default as CalculateFees } from "./visa&ImmigrationAssistance/visaDetailsPage/CalculateFees";
+export { default as VisaAssistantChat } from "./visa&ImmigrationAssistance/visaDetailsPage/VisaAssistantChat";
+export { default as VisaDetails } from "./visa&ImmigrationAssistance/visaDetailsPage/VisaDetails";
+export { default as VisaEligibility } from "./visa&ImmigrationAssistance/visaDetailsPage/VisaEligibility";

@@ -84,3 +84,7 @@ export { default as StatCard } from "./culturalIntegration/housing/StatCard";
 
 export { default as LivingHero } from "./culturalIntegration/living/Hero";
 export { default as WhyChooseUK } from "./culturalIntegration/living/WhyChooseUK";
+export { default as LandingSection } from "./culturalIntegration/LandingSection";
+export { default as EventNotices } from "./culturalIntegration/EventNotices";
+export { default as EventForm } from "./culturalIntegration/eventNotices/EventForm";
+

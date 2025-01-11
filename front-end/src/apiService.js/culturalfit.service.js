@@ -40,7 +40,7 @@ export const getOneBlogs = async (id) => {
       error.response?.data?.message ||
       "Something went wrong. Please try again.";
     return { status: "FAILD", message };
-  } 
+  }
 };
 
 export const getFeaturedBlogs = async (id) => {
@@ -48,6 +48,33 @@ export const getFeaturedBlogs = async (id) => {
     const { data } = await axiosInstance.get(
       apiEndpoints.culturalIntergretion.getFeaturedBlogs
     );
+    return data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+    return { status: "FAILD", message };
+  }
+};
+
+export const notifyNewEvent = async (formData) => {
+  try {
+    const { data } = await axiosInstance.post(
+      apiEndpoints.event.newEvent,
+      formData
+    );
+    return data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+    return { status: "FAILD", message };
+  }
+};
+
+export const getAllEvents = async () => {
+  try {
+    const { data } = await axiosInstance.get(apiEndpoints.event.getAllEvents);
     return data;
   } catch (error) {
     const message =

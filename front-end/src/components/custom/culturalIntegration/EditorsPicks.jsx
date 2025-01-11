@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const EditorsPicks = ({ editorPageBlogs }) => {
   return (
@@ -28,12 +29,12 @@ const EditorsPicks = ({ editorPageBlogs }) => {
                 {pick?.content.find((item) => item.type === "text")?.content
                   .length > 200 && "..."}
               </p>
-              <a
-                href={pick.link}
+              <Link
+                to={`/culturalIntergretion/education/view-blog/${pick?._id}`}
                 className="text-black font-medium underline mt-auto"
               >
                 Read More
-              </a>
+              </Link>
             </div>
           </div>
         ))}

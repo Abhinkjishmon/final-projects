@@ -31,6 +31,10 @@ const apiEndpoints = {
     getOneBlogs: (id) => `/culturalfit/blogs/${id}`,
     getFeaturedBlogs: `/culturalfit/featured-blogs`,
   },
+  event: {
+    newEvent: "/culturalfit/add-event",
+    getAllEvents: "/culturalfit/events",
+  },
 };
 
 export default apiEndpoints;

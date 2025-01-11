@@ -20,7 +20,7 @@ const Finance = () => {
     }
   };
   useEffect(() => {
-    scrollToTop();
+    scrollToTop();  
     fetchBlogs();
   }, []);
 

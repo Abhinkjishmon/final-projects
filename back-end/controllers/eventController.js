@@ -1,25 +1,66 @@
+const convertToBase64 = require("../helper/fileToBase64");
 const Event = require("../models/culturalfit/eventSchema.model");
+const { uploadFiletoCloudinary } = require("../utils/cloudinayFileUpload");
 
-// Controller to add a new event
+
 const addEvent = async (req, res) => {
   try {
-    const { title, description, date, createdBy, poster } = req.body;
-    // Save the event with the uploaded poster (poster path or URL)
-    const newEvent = new Event({
+    const {
       title,
       description,
       date,
-      createdBy,
-      poster,
-    });
+      venue,
+      userId,
+      capacity,
+      duration,
+      addtionalInfo,
+    } = req.body;
+    const file = req.file;
+    if (!file) {
+      return res.status(401).json({
+        message: "Event poster required..!",
+        status: "FAILED",
+      });
+    }
 
-    const event = await newEvent.save();
-    return res.status(201).json({
-      message: "new event created",
-      event,
-    });
+    // Convert the file to Base64
+    const poster = convertToBase64(file.buffer, file.mimetype);
+    if (!poster) {
+      return res.status(401).json({
+        message: "Something went wrong...! try again after some time",
+        status: "FAILED",
+      });
+    }
+
+    // Upload the file to Cloudinary
+    const cloudPlayLoad = await uploadFiletoCloudinary(poster);
+    if (cloudPlayLoad) {
+      const newEvent = new Event({
+        title,
+        description,
+        date,
+        poster: cloudPlayLoad.secure_url,
+        venue,
+        createdBy: userId,
+        capacity,
+        duration,
+        addtionalInfo,
+      });
+
+      const event = await newEvent.save();
+      return res.status(201).json({
+        message: "New event created",
+        event,
+        status: "SUCCESS",
+      });
+    } else {
+      return res.status(500).json({
+        message: "Failed to upload image to Cloudinary",
+        status: "FAILED",
+      });
+    }
   } catch (err) {
-    console.error(err);
+    console.error("Error creating event:", err);
     return res
       .status(500)
       .json({ error: "Error creating event", details: err });
@@ -27,7 +68,7 @@ const addEvent = async (req, res) => {
 };
 
 const getEventById = async (req, res) => {
-  const { eventId } = req.params; // Extract event ID from request parameters
+  const { eventId } = req.params;
 
   try {
     const event = await Event.findById(eventId);
@@ -38,7 +79,6 @@ const getEventById = async (req, res) => {
 
     return res.status(200).json(event);
   } catch (err) {
-    console.error(err);
     return res
       .status(500)
       .json({ error: "Error fetching event", details: err });
@@ -47,8 +87,9 @@ const getEventById = async (req, res) => {
 
 const getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find({ status: { $ne: "removed" } }) // Exclude removed events
-      .sort({ date: -1 }); // Optional: Sort events by date in descending order
+    const events = await Event.find({ status: { $ne: "removed" } })
+      .sort({ date: -1 })
+      .populate({ path: "createdBy", select: "-password" });
 
     if (!events || events.length === 0) {
       return res.status(404).json({ message: "No events found" });
@@ -63,12 +104,11 @@ const getAllEvents = async (req, res) => {
   }
 };
 
-// Controller to delete an event (soft delete by changing status to 'removed')
+
 const deleteEvent = async (req, res) => {
   const { eventId } = req.params;
 
   try {
-    // Find the event by ID and mark its status as 'removed'
     const event = await Event.findByIdAndDelete(eventId);
 
     if (!event) {

@@ -14,6 +14,7 @@ import {
   Assignments,
   BlogReadPage,
   Blogs,
+  CalculateFees,
   Chats,
   ClassRoom,
   ClassRoomInfo,
@@ -40,7 +41,11 @@ import {
   Profile,
   Register,
   Resources,
+  ViewAllEventNotice,
+  VisaAssistantChat,
+  VisaDetails,
   VisaDetailsPage,
+  VisaEligibility,
   VisaSolutionsLanding,
 } from "./pages";
 import { Footer, Header, ProtectedRoute } from "./components/custom";
@@ -263,6 +268,10 @@ const route = createBrowserRouter([
       {
         path: "create-blog",
         element: <CreateBlog />,
+      },
+      {
+        path: "view-EventNotice",
+        element: <ViewAllEventNotice />,
       },
       {
         path: "education",

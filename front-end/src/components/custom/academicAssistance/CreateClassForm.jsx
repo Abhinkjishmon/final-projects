@@ -17,7 +17,6 @@ const CreateClassForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Class Created:", formData);
-    // Add form submission logic (e.g., API call) here.
   };
 
   return (
@@ -27,7 +26,6 @@ const CreateClassForm = () => {
           Create a New Class
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Class Title */}
           <div>
             <label
               htmlFor="title"
@@ -47,7 +45,6 @@ const CreateClassForm = () => {
             />
           </div>
 
-          {/* Description */}
           <div>
             <label
               htmlFor="description"

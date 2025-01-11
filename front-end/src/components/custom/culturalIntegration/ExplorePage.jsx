@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const ExplorePage = ({ explorePageBlogs }) => {
   return (
@@ -25,24 +26,29 @@ const ExplorePage = ({ explorePageBlogs }) => {
         </div>
         <div className="flex flex-col gap-4">
           {explorePageBlogs?.slice(0, 3).map((article, index) => (
-            <div
-              key={index}
-              className="flex items-start gap-4 bg-white shadow-md p-4 rounded-lg"
+            <Link
+              to={`/culturalIntergretion/education/view-blog/${article?._id}`}
             >
-              <img
-                src={
-                  article?.content.find((item) => item.type === "image").content
-                }
-                alt={article.title}
-                className="w-16 h-16 object-cover rounded-lg"
-              />
-              <div>
-                <p className="text-green-500 text-sm font-medium">
-                  {article.category}
-                </p>
-                <h3 className="text-md font-semibold">{article.title}</h3>
+              <div
+                key={index}
+                className="flex items-start gap-4 bg-white shadow-md p-4 rounded-lg"
+              >
+                <img
+                  src={
+                    article?.content.find((item) => item.type === "image")
+                      .content
+                  }
+                  alt={article.title}
+                  className="w-16 h-16 object-cover rounded-lg"
+                />
+                <div>
+                  <p className="text-green-500 text-sm font-medium">
+                    {article.category}
+                  </p>
+                  <h3 className="text-md font-semibold">{article.title}</h3>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

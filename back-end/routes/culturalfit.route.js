@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const {
   createBlog,
   updateBlog,
@@ -15,6 +16,9 @@ const {
   getAllEvents,
   getEventById,
 } = require("../controllers/eventController");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const router = express.Router();
 
@@ -44,7 +48,7 @@ router.get("/events", isAuthorizedUser, getAllEvents);
 router.get("/events/:eventId", isAuthorizedUser, getEventById);
 
 // Route for adding an event
-router.post("/add-event", isAuthorizedUser, addEvent);
+router.post("/add-event", upload.single("poster"), isAuthorizedUser, addEvent);
 
 // Route for deleting an event (soft delete)
 router.delete("/delete-event/:eventId", isAuthorizedUser, deleteEvent);

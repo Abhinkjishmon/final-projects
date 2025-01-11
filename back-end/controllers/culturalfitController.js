@@ -137,7 +137,7 @@ const getFeaturedBlogs = async (req, res) => {
   try {
     const blogs = await Blog.aggregate([
       {
-        $sample: { size: 8 },
+        $sample: { size: 10 },
       },
       {
         $lookup: {
@@ -197,7 +197,6 @@ const toggleLike = async (req, res) => {
     const { blogId } = req.params;
     const { userId } = req.body;
 
-    // Find the blog by ID
     const blog = await Blog.findById(blogId);
     if (!blog) {
       return res.status(404).json({ message: "Blog not found." });
@@ -210,14 +209,11 @@ const toggleLike = async (req, res) => {
     const alreadyLiked = blog.likes.some((id) => id.toString() === userId);
 
     if (alreadyLiked) {
-      // Remove the user from the likes array
       blog.likes = blog.likes.filter((id) => id.toString() !== userId);
     } else {
-      // Add the user to the likes array
       blog.likes.push(userId);
     }
 
-    // Save the updated blog
     await blog.save();
 
     res.status(200).json({
