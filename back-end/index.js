@@ -13,6 +13,7 @@ const notificationRoute = require("./routes/notifications.route.js");
 const jobs = require("./routes/jobsRoute.js");
 const culturalfitRoute = require("./routes/culturalfit.route.js");
 const acadamicAssistance = require("./routes/acadamicAssistance.route.js");
+const visaAssistence = require("./routes/visaAndImmigartion.route.js");
 const cloudinaryConfig = require("./db/cloudinaryConfig.js");
 
 const app = express();
@@ -28,6 +29,7 @@ app.use(`${baseURl}/notifications`, notificationRoute);
 app.use(`${baseURl}/jobs`, jobs);
 app.use(`${baseURl}/culturalfit`, culturalfitRoute);
 app.use(`${baseURl}/acadamic`, acadamicAssistance);
+app.use(`${baseURl}/visaAndImmigartions`, visaAssistence);
 
 app.get(`${baseURl}/`, (req, res) => {
   res.status(200).json({ message: `server running at PORT ${PORT}` });

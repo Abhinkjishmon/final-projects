@@ -25,7 +25,7 @@ const FloatingElement = ({ Icon, color, size, position, animation }) => (
 function LandingPage() {
   const user = useSelector((state) => state.user.user);
   useEffect(() => {
-    console.log(user);
+    
   }, []);
 
   return (

@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 
 function EventCard({ event }) {
-  console.log(event?.createdBy, "ll");
   const [isExpanded, setIsExpanded] = useState(false);
 
   const formatDate = (dateString) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FileCheck,
   Calculator,
@@ -13,9 +13,16 @@ import {
   VisaDetails,
   VisaEligibility,
 } from "@/pages";
+import { visaHeadings } from "@/utils/data/detailsVisaInfo";
+import { useLocation } from "react-router-dom";
 
 const VisaDetailsPage = () => {
   const [activeTab, setActiveTab] = useState("visaDetails");
+  const [visaDetails, setVisaDetails] = useState();
+  const location = useLocation();
+  const currentUrl = location.pathname + location.search;
+  const queryParams = new URLSearchParams(location.search);
+  const visatype = queryParams.get("visatype");
 
   const buttonData = [
     {
@@ -55,13 +62,21 @@ const VisaDetailsPage = () => {
   const activeComponent = buttonData.find(
     (button) => button.id === activeTab
   )?.component;
-
+  function findVisaByType(visaType) {
+    const visaDetails = visaHeadings.find((visa) => visa.visaType === visaType);
+    setVisaDetails(visaDetails);
+    console.log(visaType);
+  }
+  useEffect(() => {
+    findVisaByType(visatype);
+  }, []);
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="relative h-[500px] overflow-hidden">
         <div className="absolute inset-0">
+          
           <img
-            src="https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&q=80"
+            src={visaDetails?.image}
             alt="Travel Banner"
             className="w-full h-full object-cover"
           />
@@ -75,12 +90,11 @@ const VisaDetailsPage = () => {
                 <Globe className="w-10 h-10 text-blue-300" />
               </div>
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
-                Tourist Visa Portal
+                {visaDetails?.heading}
               </h1>
             </div>
             <p className="text-xl text-blue-100 max-w-3xl leading-relaxed">
-              Your gateway to seamless travel documentation. Explore our
-              comprehensive visa services designed for modern travelers.
+              {visaDetails?.subHeading}
             </p>
           </div>
         </div>

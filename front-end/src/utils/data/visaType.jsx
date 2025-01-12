@@ -13,7 +13,7 @@ import {
 export const visaTypes = [
   {
     icon: <FaPlane className="w-12 h-12" />,
-    title: "Tourist & Visiting Visa",
+    title: "Tourist",
     description:
       "Perfect for travelers planning temporary stays for tourism, family visits, or business meetings.",
     duration: "Duration: Up to 6 months",

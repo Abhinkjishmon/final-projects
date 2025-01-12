@@ -1,23 +1,22 @@
 import React from "react";
 import { Clock, Users, ChevronRight } from "lucide-react";
 
-const CourseInfo = () => {
+const CourseInfo = ({ classRoomDetails }) => {
   return (
     <div className="bg-white p-6 rounded-lg">
-      <h1 className="text-2xl font-bold mb-2">
-        Creating Beautiful Landing Page in 1 Hour
-      </h1>
+      <h1 className="text-2xl font-bold mb-2">{classRoomDetails?.title}</h1>
       <div className="flex items-center space-x-4 mb-6">
         <div className="flex items-center space-x-2">
           <img
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"
+            src={classRoomDetails?.createdBy?.profileImg}
             alt="Mentor"
-            className="w-8 h-8 rounded-full"
+            className="w-8 h-8 object-cover rounded-full"
           />
-          <span className="text-gray-600">Geo Vanni</span>
+          <span className="text-gray-600">
+            {classRoomDetails?.createdBy?.fullname}
+          </span>
         </div>
         <span className="text-gray-400">•</span>
-        <span className="text-gray-600">Interface, Experience</span>
         <button className="text-blue-500 hover:text-blue-600">
           Join Class Room
         </button>
@@ -32,7 +31,7 @@ const CourseInfo = () => {
       <div className="space-y-6">
         <div className="bg-gray-50 p-4 rounded-lg">
           <div className="flex flex-col items-center justify-between">
-            <div className="min-h-screen bg-gray-50 p-6">
+            <div className="min-h-screen w-full bg-gray-50 p-6">
               <header className="text-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-800">
                   Course Overview
@@ -41,29 +40,22 @@ const CourseInfo = () => {
                   Learn why this course stands out and what it covers.
                 </p>
               </header>
-              <div className="max-w-5xl mx-auto space-y-10">
-                <section className="bg-white shadow-md rounded-lg p-6">
+              <div className="w-full mx-auto space-y-10">
+                <section className="bg-white max-w-5xl shadow-md rounded-lg p-6">
                   <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                     Description
                   </h2>
                   <p className="text-gray-700 leading-relaxed">
-                    This course is designed to provide you with a solid
-                    understanding of the fundamentals, advanced concepts, and
-                    industry best practices. With a focus on real-world
-                    applications, you’ll learn not just the "what," but also the
-                    "why" and "how."
+                    {classRoomDetails?.description}
                   </p>
                 </section>
                 <section className="bg-white shadow-md rounded-lg p-6">
                   <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                     Why is this best?
                   </h2>
-                  <ul className="list-disc list-inside space-y-2 text-gray-700">
-                    <li>Expert instructors with real-world experience.</li>
-                    <li>Comprehensive and up-to-date curriculum.</li>
-                    <li>Hands-on projects to enhance practical skills.</li>
-                    <li>Flexible learning schedules and support.</li>
-                  </ul>
+                  <p className="text-gray-700 leading-relaxed">
+                    {classRoomDetails?.whyGood}
+                  </p>
                 </section>
 
                 <section className="bg-white shadow-md rounded-lg p-6">
@@ -71,50 +63,17 @@ const CourseInfo = () => {
                     What is Cover/Syllabus?
                   </h2>
                   <div className="space-y-4">
-                    <div className="bg-gray-100 p-4 rounded-md shadow-sm">
-                      <h3 className="font-bold text-gray-800">
-                        Module 1: Introduction
-                      </h3>
-                      <p className="text-gray-700">
-                        Overview of the course, key concepts, and objectives.
-                      </p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-md shadow-sm">
-                      <h3 className="font-bold text-gray-800">
-                        Module 2: Intermediate Topics
-                      </h3>
-                      <p className="text-gray-700">
-                        Deep dive into more complex subjects with practical
-                        examples.
-                      </p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-md shadow-sm">
-                      <h3 className="font-bold text-gray-800">
-                        Module 3: Advanced Applications
-                      </h3>
-                      <p className="text-gray-700">
-                        Hands-on projects and case studies to reinforce
-                        learning.
-                      </p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-md shadow-sm">
-                      <h3 className="font-bold text-gray-800">
-                        Module 3: Advanced Applications
-                      </h3>
-                      <p className="text-gray-700">
-                        Hands-on projects and case studies to reinforce
-                        learning.
-                      </p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-md shadow-sm">
-                      <h3 className="font-bold text-gray-800">
-                        Module 3: Advanced Applications
-                      </h3>
-                      <p className="text-gray-700">
-                        Hands-on projects and case studies to reinforce
-                        learning.
-                      </p>
-                    </div>
+                    {classRoomDetails?.syllabus.map((module, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-100 p-4 rounded-md shadow-sm"
+                      >
+                        <h3 className="font-bold text-gray-800">
+                          {module.title}
+                        </h3>
+                        <p className="text-gray-700">{module.description}</p>
+                      </div>
+                    ))}
                   </div>
                 </section>
               </div>

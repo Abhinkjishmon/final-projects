@@ -11,7 +11,7 @@ const categories = [
 export function CoursesHeader() {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-      <h1 className="text-2xl font-bold">Your Classes</h1>
+      <h1 className="text-2xl font-bold">New Class Rooms</h1>
     </div>
   );
 }

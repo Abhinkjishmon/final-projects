@@ -52,7 +52,9 @@ const VisaTypesSection = () => {
                   </div>
                 ))}
               </div>
-              <Link to={"/visaImmigrationAssistance/visa-detailsPage"}>
+              <Link
+                to={`/visaImmigrationAssistance/visa-detailsPage?visatype=${visa.title}`}
+              >
                 <button
                   className={`w-full ${visa.buttonColor} text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition-colors`}
                 >

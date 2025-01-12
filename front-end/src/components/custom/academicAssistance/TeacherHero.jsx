@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { GraduationCap, Users, BookOpen } from "lucide-react";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import CreateClassForm from "./CreateClassForm";
 const TeacherHero = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
     <div className="relative bg-gradient-to-b from-violet-50 to-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
@@ -28,7 +29,7 @@ const TeacherHero = () => {
                 Live, you can instantly create a more engaged classroom.
               </p>
               <div className="space-y-4 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row">
-                <Dialog>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger>
                     <button className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200">
                       Create a class Room
@@ -37,7 +38,9 @@ const TeacherHero = () => {
                   <DialogContent>
                     <DialogHeader>
                       <DialogDescription>
-                        <CreateClassForm />
+                        <CreateClassForm
+                          closeDialog={() => setIsDialogOpen(false)}
+                        />
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>

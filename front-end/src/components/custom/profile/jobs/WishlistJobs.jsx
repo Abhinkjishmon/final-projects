@@ -38,7 +38,6 @@ function WishlistJobs() {
 
   const handleRemoveFromWishlist = (jobId) => {
     // In a real app, this would make an API call to remove the job from wishlist
-    console.log("Remove from wishlist:", jobId);
   };
 
   return (

@@ -16,7 +16,6 @@ export function ImageUpload({ label, imageUrl, onChange, className = "" }) {
     }
   };
   useEffect(() => {
-    console.log(imageUrl)
     setImage(imageUrl);
   }, [imageUrl]);
 

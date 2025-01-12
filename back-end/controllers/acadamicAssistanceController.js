@@ -1,28 +1,56 @@
+const convertToBase64 = require("../helper/fileToBase64");
 const Classroom = require("../models/academicAssistance/classroomSchema.model");
 const StudyMaterial = require("../models/academicAssistance/studyMaterialSchema.model");
 const path = require("path");
+const { uploadFiletoCloudinary } = require("../utils/cloudinayFileUpload");
 
 const createClassroom = async (req, res) => {
   try {
-    const { name, description, userId } = req.body;
-
-    // Check if the user is authenticated
+    const { name, description, title, userId, category, whyGood, syllabus } =
+      req.body;
+    console.log(req.body);
     if (!userId) {
       return res.status(401).json({ msg: "User not authenticated" });
     }
+    const file = req.file;
+    if (!file) {
+      return res.status(401).json({
+        message: "Event poster required..!",
+        status: "FAILED",
+      });
+    }
+    console.log(file);
+    const poster = convertToBase64(file.buffer, file.mimetype);
+    if (!poster) {
+      return res.status(401).json({
+        message: "Something went wrong...! try again after some time",
+        status: "FAILED",
+      });
+    }
+    const cloudPlayLoad = await uploadFiletoCloudinary(poster);
+    if (!poster) {
+      return res.status(401).json({
+        message: "Something went wrong...! try again after some time",
+        status: "FAILED",
+      });
+    }
 
-    // Create a new classroom
     const newClassroom = new Classroom({
+      title,
       name,
       description,
-      createdBy: userId, // The creator of the classroom
+      createdBy: userId,
+      category,
+      coverVideo: cloudPlayLoad.secure_url,
+      whyGood,
+      syllabus,
     });
-
-    // Save the new classroom to the database
     await newClassroom.save();
-
-    // Return the created classroom
-    res.status(201).json(newClassroom);
+    res.status(201).json({
+      newClassroom,
+      message: "New class room created successfully",
+      status: "SUCCESS",
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ msg: "Server Error" });
@@ -179,15 +207,10 @@ const deleteStudyMaterial = async (req, res) => {
 // Get all classrooms
 const getAllClassrooms = async (req, res) => {
   try {
-    // Find all classrooms
     const classrooms = await Classroom.find();
-
-    // If no classrooms are found
     if (classrooms.length === 0) {
       return res.status(404).json({ message: "No classrooms found" });
     }
-
-    // Respond with the list of classrooms
     res.status(200).json(classrooms);
   } catch (error) {
     console.error(error);
@@ -199,19 +222,13 @@ const getAllClassrooms = async (req, res) => {
 const getClassroomDetails = async (req, res) => {
   try {
     const { classroomId } = req.params;
-
-    // Find the classroom by ID and populate studyMaterials and participants
     const classroom = await Classroom.findById(classroomId)
-      .populate("createdBy", "fullname email") // Populate the creator's name and email
-      .populate("participants.userId", "fullname email") // Populate participant details (name, email)
+      .populate({ path: "createdBy", select: "-password" })
+      .populate("participants.userId", "fullname email")
       .exec();
-
-    // If the classroom is not found
     if (!classroom) {
       return res.status(404).json({ message: "Classroom not found" });
     }
-
-    // Return the classroom with its populated data
     res.status(200).json(classroom);
   } catch (error) {
     console.error(error);

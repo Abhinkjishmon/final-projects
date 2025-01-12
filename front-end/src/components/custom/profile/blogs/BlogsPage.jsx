@@ -63,8 +63,7 @@ function BlogsPage() {
   ];
 
   const handleLikeToggle = (blogId) => {
-    // In a real app, this would make an API call to toggle the like status
-    console.log("Toggle like for blog:", blogId);
+    
   };
 
   return (

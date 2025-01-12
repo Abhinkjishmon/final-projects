@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const BlogCard = ({ postDetails, content, author, title }) => {
-  console.log(postDetails);
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
       <img

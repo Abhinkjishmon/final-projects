@@ -11,6 +11,8 @@ const mongoDBUrl = `mongodb://localhost:27017/easyway`;
 const accessSecritKey = process.env.ACCESS_SECRIT_KEY;
 const refreshSecritKey = process.env.REFRESH_SECRIT_KEY;
 
+const geminiApiKey = process.env.GEMINI_API;
+
 const baseURl = "/api/v1";
 const frontEndURL = process.env.FRONT_END;
 
@@ -33,4 +35,5 @@ module.exports = {
   baseURl,
   corsOptions,
   cloudinaryCred,
+  geminiApiKey
 };

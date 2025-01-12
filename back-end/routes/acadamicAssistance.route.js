@@ -11,6 +11,9 @@ const {
   getStudyMaterialsForClassroom,
   deleteClassroom,
 } = require("../controllers/acadamicAssistanceController");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const router = express.Router();
 // Route to get all classrooms
@@ -18,7 +21,12 @@ router.get("/classrooms", isAuthorizedUser, getAllClassrooms);
 // Route to get a classroom with study materials and participants
 router.get("/classrooms/:classroomId", isAuthorizedUser, getClassroomDetails);
 
-router.post("/new-classroom", isAuthorizedUser, createClassroom);
+router.post(
+  "/new-classroom",
+  upload.single("coverVideo"),
+  isAuthorizedUser,
+  createClassroom
+);
 // Route to join a classroom
 router.post("/classrooms/:classroomId/join", isAuthorizedUser, joinClassroom);
 // Route to leave a classroom

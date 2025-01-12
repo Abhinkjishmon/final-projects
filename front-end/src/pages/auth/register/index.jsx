@@ -51,7 +51,6 @@ function Register() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      console.log("Form submitted successfully:", formData);
       registerUser(formData);
     }
   };

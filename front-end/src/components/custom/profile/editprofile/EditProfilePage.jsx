@@ -31,7 +31,6 @@ function EditProfilePage() {
     },
   });
   const [changesProfileInfo, setChangesProfileInfo] = useState({});
-  // Fetch the user profile when the component mounts
   useEffect(() => {
     dispatch(fetchUserProfile(id));
   }, [dispatch, id]);
@@ -99,7 +98,6 @@ function EditProfilePage() {
   };
   async function updateUserProfile(id, formData) {
     const responsce = await updateUserInfo(id, formData);
-    console.log(responsce);
   }
 
   return (

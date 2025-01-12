@@ -9,14 +9,9 @@ export const handleCompressAndAppendImages = async (imagesArray, formData) => {
     };
 
     for (let index = 0; index < imagesArray.length; index++) {
-      console.log(imagesArray[index]);
-      const compressedImage = await imageCompression(
-        options
-      );
+      const compressedImage = await imageCompression(options);
       formData.append("images", compressedImage);
     }
-
-    console.log("All images compressed and appended to FormData.");
   } catch (error) {
     console.error("Error compressing images:", error);
   }

@@ -186,37 +186,38 @@ const route = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Header />
-        <Outlet />
+        <Outlet /> 
         <Footer />
       </ProtectedRoute>
     ),
     children: [
+   
       {
         path: "",
         element: <Acadamic />,
       },
       {
-        path: "class-room",
-        element: <Outlet />,
+        path: "class-room/:id",
+        element: <Outlet />, 
         children: [
           {
             path: "",
             element: <ClassRoom />,
           },
           {
-            path: "resources",
+            path: "resources", 
             element: <Resources />,
           },
           {
-            path: "live-class",
+            path: "live-class", 
             element: <LiveClass />,
           },
           {
-            path: "daily-task",
+            path: "daily-task", 
             element: <DailyTask />,
           },
           {
-            path: "chats",
+            path: "chats", 
             element: <Chats />,
           },
           {
@@ -224,7 +225,7 @@ const route = createBrowserRouter([
             element: <Aiassistant />,
           },
           {
-            path: "assignments",
+            path: "assignments", 
             element: <Assignments />,
           },
         ],

@@ -1,3 +1,4 @@
+import { getClassRooms } from "@/apiService.js/acadamic.service";
 import {
   AcadamicLanding,
   CourseCard,
@@ -6,7 +7,7 @@ import {
 } from "@/components/custom";
 import { CoursesHeader } from "@/components/custom/academicAssistance/CoursesHeader";
 import { scrollToTop } from "@/utils/scroll";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function Acadamic() {
   const courses = [
@@ -83,10 +84,20 @@ function Acadamic() {
       rating: 4.9,
     },
   ];
-
+  const [classRoom, setClassRoom] = useState();
+  const [showClassRoom, setShowClassRoom] = useState();
   useEffect(() => {
     scrollToTop();
+    const fetchAllClassRooms = async () => {
+      const response = await getClassRooms();
+      setClassRoom(response);
+      setShowClassRoom(response.slice(0, 4));
+    };
+    fetchAllClassRooms();
   }, []);
+  const showAllClasses = () => {
+    setShowClassRoom(classRoom);
+  };
   return (
     <>
       <AcadamicLanding />
@@ -106,9 +117,17 @@ function Acadamic() {
         <main className="container mx-auto md:px-20  px-4 py-8">
           <CoursesHeader />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {courses.map((course) => (
+            {showClassRoom?.map((course) => (
               <CourseCard key={course.title} {...course} />
             ))}
+          </div>
+          <div className="w-full flex justify-center my-10">
+            <button
+              className="rounded-md bg-black text-white p-2"
+              onClick={showAllClasses}
+            >
+              View all
+            </button>
           </div>
         </main>
       </div>

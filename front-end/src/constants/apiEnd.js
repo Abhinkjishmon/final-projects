@@ -35,6 +35,16 @@ const apiEndpoints = {
     newEvent: "/culturalfit/add-event",
     getAllEvents: "/culturalfit/events",
   },
+  visaAndImmigartion: {
+    chat: "/visaAndImmigartions/chat-assist",
+    previousChat: "/visaAndImmigartions/get-chat",
+    checkEligibility: "/visaAndImmigartions/check-eligibility",
+  },
+  acadamic: {
+    newClass: "/acadamic/new-classroom",
+    getAllClassRoom: "/acadamic/classrooms",
+    getOneClass: (classroomId) => `/acadamic/classrooms/${classroomId}`,
+  },
 };
 
 export default apiEndpoints;

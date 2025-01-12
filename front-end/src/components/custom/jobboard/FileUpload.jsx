@@ -12,7 +12,6 @@ function FileUpload({ value, onChange }) {
       render.onload = () => {
         setResume(render.result);
         onChange(resume);
-        console.log(resume)
       };
       render.readAsDataURL(file);
     }

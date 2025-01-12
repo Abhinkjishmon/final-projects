@@ -8,32 +8,41 @@ import {
   MdLiveTv,
   MdOutlineGrain,
 } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const Sidebar = () => {
+  const { id } = useParams();
   const menuItems = [
-    { name: "Home", icon: <FaHome />, href: "/acadamic/class-room" },
+    { name: "Home", icon: <FaHome />, href: `/acadamic/class-room/${id}` },
     {
       name: "Resources",
       icon: <GrResources />,
-      href: "/acadamic/class-room/resources",
+      href: `/acadamic/class-room/${id}/resources`,
     },
-    { name: "Chats", icon: <CiChat1 />, href: "/acadamic/class-room/chats" },
+    {
+      name: "Chats",
+      icon: <CiChat1 />,
+      href: `/acadamic/class-room/${id}/chats`,
+    },
     {
       name: "Daily task",
       icon: <MdOutlineTaskAlt />,
-      href: "/acadamic/class-room/daily-task",
+      href: `/acadamic/class-room/${id}/daily-task`,
     },
     {
       name: "Assignments",
       icon: <MdOutlineAssignment />,
-      href: "/acadamic/class-room/assignments",
+      href: `/acadamic/class-room/${id}/assignments`,
     },
-    { name: "Live Class", icon: <MdLiveTv />, href: "/acadamic/class-room/live-class" },
+    {
+      name: "Live Class",
+      icon: <MdLiveTv />,
+      href: `/acadamic/class-room/${id}/live-class`,
+    },
     {
       name: "Ai assistant",
       icon: <MdOutlineGrain />,
-      href: "/acadamic/class-room/ai-assistant",
+      href: `/acadamic/class-room/${id}/ai-assistant`,
     },
   ];
 

@@ -49,7 +49,7 @@ export default function EventForm({ closeDialog }) {
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, poster: file }));
+        ((prev) => ({ ...prev, poster: file }));
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
     }
