@@ -80,7 +80,6 @@ function Resources() {
           </div>
         </div>
       </main>
-      <Rightbar />
     </div>
   );
 }

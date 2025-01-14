@@ -9,11 +9,11 @@ function Header() {
   const user = useSelector((state) => state.user.user);
 
   const menuItems = [
-    { label: "Home", href: "#" },
-    { label: "Products", href: "#" },
-    { label: "Services", href: "#" },
-    { label: "About", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "Find Accommodations", href: "/find-accommodations" },
+    { label: "Part Time Job", href: "/find-job" },
+    { label: "Cultural Integration", href: "/culturalIntergretion" },
+    { label: "Visa Assistance", href: "/visaImmigrationAssistance" },
+    { label: "Academic", href: "/acadamic" },
   ];
   return (
     <header className="bg-white shadow-md">
@@ -34,8 +34,6 @@ function Header() {
               </a>
             ))}
           </div>
-
-          {/* Desktop Icons */}
           <Link to={`/profile/${user.userId}`}>
             {user ? (
               <div className="flex items-center space-x-4">

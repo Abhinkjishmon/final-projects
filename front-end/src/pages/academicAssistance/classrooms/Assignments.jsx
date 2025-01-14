@@ -87,7 +87,6 @@ const Assignments = () => {
           </div>
         </div>
       </main>
-      <Rightbar />
     </div>
   );
 };

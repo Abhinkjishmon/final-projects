@@ -19,7 +19,6 @@ function Home() {
       <HomeSlogen />
       <Hero />
       <Whychoose />
-      <SpendingTracker/>
       <Services />
       <ArticalPreview />
       <FAQ/>

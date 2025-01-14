@@ -79,7 +79,6 @@ function LiveClass() {
           </div>
         </div>
       </main>
-      <Rightbar />
     </div>
   );
 }

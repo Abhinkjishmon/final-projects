@@ -41,3 +41,17 @@ export const getOneClassRooms = async (classroomId) => {
     return { status: "FAILD", message };
   }
 };
+
+export const joinClassRooms = async(classroomId) => {
+  try {
+    const { data } = await axiosInstance.post(
+      apiEndpoints.acadamic.joinClassRoom(classroomId)
+    );
+    return data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+    return { status: "FAILD", message };
+  }
+};

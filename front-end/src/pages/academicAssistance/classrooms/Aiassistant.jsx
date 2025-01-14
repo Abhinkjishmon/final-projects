@@ -97,7 +97,6 @@ function Aiassistant() {
           </div>
         </div>
       </main>
-      <Rightbar />
     </div>
   );
 }

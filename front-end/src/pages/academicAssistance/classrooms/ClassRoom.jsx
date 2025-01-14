@@ -16,6 +16,7 @@ function ClassRoom() {
     };
     fetchClassRoomDetails(id);
   }, []);
+  
   return (
     <>
       <div className="flex h-screen bg-gray-50 ">

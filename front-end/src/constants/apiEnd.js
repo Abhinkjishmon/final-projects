@@ -44,6 +44,11 @@ const apiEndpoints = {
     newClass: "/acadamic/new-classroom",
     getAllClassRoom: "/acadamic/classrooms",
     getOneClass: (classroomId) => `/acadamic/classrooms/${classroomId}`,
+    joinClassRoom: (classroomId) => `/acadamic/classrooms/${classroomId}/join`,
+    getClassRoomDetails: () => `/classrooms/${classroomId}`,
+  },
+  liveNews: {
+    getLiveNews: `https://newsdata.io/api/1/latest?apikey=pub_50304e39cfbce9f3f75e11b4b7906c0d2e3c8&country=gb`,
   },
 };
 

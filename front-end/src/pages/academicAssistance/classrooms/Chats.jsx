@@ -73,7 +73,6 @@ function Chats() {
             </div>
           </div>
         </main>
-        <Rightbar />
       </div>
     </div>
   );

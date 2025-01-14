@@ -56,20 +56,17 @@ const createClassroom = async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   }
 };
+
 // Join a classroom
 const joinClassroom = async (req, res) => {
   try {
-    const { classroomId } = req.params; // Get the classroomId from the URL parameter
-    const { userId } = req.body; // Assuming you're using a middleware for authentication to get the logged-in user's ID
-
-    // Find the classroom by its ID
+    const { classroomId } = req.params; 
+    const { userId } = req.body; 
     const classroom = await Classroom.findById(classroomId);
 
     if (!classroom) {
       return res.status(404).json({ message: "Classroom not found" });
     }
-
-    // Check if the user is already a participant
     const existingParticipant = classroom.participants.some(
       (participant) => participant.userId.toString() === userId.toString()
     );
@@ -77,19 +74,17 @@ const joinClassroom = async (req, res) => {
       return res.status(400).json({ message: "User is already a participant" });
     }
 
-    // Add the user to the classroom participants array
     classroom.participants.push({
       userId: userId,
       joinedAt: new Date(),
     });
 
-    // Save the updated classroom
     await classroom.save();
 
-    // Respond with success
     res.status(200).json({
       message: "Joined classroom successfully",
       classroom,
+      status:"SUCCESS"
     });
   } catch (error) {
     console.error(error);
@@ -256,7 +251,7 @@ const getStudyMaterialsForClassroom = async (req, res) => {
   }
 };
 
-// Delete classroom and associated study materials
+
 const deleteClassroom = async (req, res) => {
   try {
     const { classroomId } = req.params;

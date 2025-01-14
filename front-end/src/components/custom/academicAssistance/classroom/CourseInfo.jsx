@@ -1,7 +1,17 @@
 import React from "react";
 import { Clock, Users, ChevronRight } from "lucide-react";
+import { joinClassRooms } from "@/apiService.js/acadamic.service";
+import { toast } from "react-toastify";
 
 const CourseInfo = ({ classRoomDetails }) => {
+  const toggleClassRoom = async () => {
+    const response = await joinClassRooms(classRoomDetails._id);
+    if (response.status !== "SUCCESS") {
+      toast.error(response.message);
+    } else {
+      toast.success(response.message);
+    }
+  };
   return (
     <div className="bg-white p-6 rounded-lg">
       <h1 className="text-2xl font-bold mb-2">{classRoomDetails?.title}</h1>
@@ -17,7 +27,10 @@ const CourseInfo = ({ classRoomDetails }) => {
           </span>
         </div>
         <span className="text-gray-400">•</span>
-        <button className="text-blue-500 hover:text-blue-600">
+        <button
+          className="text-blue-500 hover:text-blue-600"
+          onClick={toggleClassRoom}
+        >
           Join Class Room
         </button>
       </div>

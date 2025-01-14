@@ -11,7 +11,6 @@ function DailyTask() {
           
         </div>
       </main>
-      <Rightbar />
     </div>
   );
 }
