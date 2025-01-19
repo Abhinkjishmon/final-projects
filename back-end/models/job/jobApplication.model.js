@@ -10,13 +10,13 @@ const applicationSchema = new mongoose.Schema({
   candidateName: { type: String, required: true },
   candidateEmail: { type: String, required: true },
   candidatePhone: { type: String },
-  resume: { type: String, required: true }, // File URL
+  resume: { type: String, required: true },
   coverLetter: { type: String },
   skills: [{ type: String }],
-  experience: { type: Number }, // years
+  experience: { type: Number },
   status: {
     type: String,
-    enum: ["Applied", "Shortlisted", "Interviewed"],
+    enum: ["Shortlisted", "Interviewed", "Rejected", "Selected"],
     default: "Applied",
   },
   applicationDate: { type: Date, default: Date.now },

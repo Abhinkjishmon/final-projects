@@ -201,11 +201,7 @@ const toggleLike = async (req, res) => {
     if (!blog) {
       return res.status(404).json({ message: "Blog not found." });
     }
-
-    // Clean up the `likes` array to remove any `null` or invalid entries
     blog.likes = blog.likes.filter((id) => id !== null);
-
-    // Ensure the comparison is consistent by converting IDs to strings
     const alreadyLiked = blog.likes.some((id) => id.toString() === userId);
 
     if (alreadyLiked) {
@@ -228,6 +224,31 @@ const toggleLike = async (req, res) => {
   }
 };
 
+// Get blogs by a specific user
+const getUserBlogs = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+    const userBlogs = await Blog.find({ author: userId }).populate(
+      "author",
+      "fullname profileImg"
+    );
+    if (userBlogs.length === 0) {
+      return res.status(404).json({ message: "No blogs found for this user." });
+    }
+
+    res.status(200).json({
+      message: "Blogs fetched successfully.",
+      blogs: userBlogs,
+    });
+  } catch (error) {
+    console.error("Error fetching user blogs:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+
 module.exports = {
   createBlog,
   updateBlog,
@@ -236,4 +257,5 @@ module.exports = {
   getBlogs,
   getOneBlogs,
   getFeaturedBlogs,
+  getUserBlogs,
 };

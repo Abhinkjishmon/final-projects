@@ -1,61 +1,50 @@
-import React from "react";
+import React, { act, useEffect, useState } from "react";
 
 import JobCardProps from "./JobCardProps";
-
-// Mock data - In a real app, this would come from an API
-const mockCreatedJobs = [
-  {
-    id: "1",
-    title: "React Developer",
-    company: "My Company",
-    location: "New York, NY",
-    type: "Full-time",
-    salary: "$100k - $130k",
-    description: "We are seeking a React developer...",
-    requirements: ["3+ years React experience", "TypeScript"],
-    postedDate: "2024-03-12",
-  },
-  {
-    id: "2",
-    title: "UI/UX Designer",
-    company: "My Company",
-    location: "Remote",
-    type: "Contract",
-    salary: "$80k - $100k",
-    description: "Looking for a creative UI/UX designer...",
-    requirements: ["Figma", "User Research", "Prototyping"],
-    postedDate: "2024-03-11",
-  },
-];
+import { deleteJob, jobCreatedByUser } from "@/apiService.js/profile.service";
+import { Link } from "react-router-dom";
 
 function CreatedJobs() {
-  const handleJobAction = (action, jobId) => {
-    // In a real app, these actions would trigger API calls
-    switch (action) {
-      case "view":
-        console.log("View job details:", jobId);
-        break;
-      case "applications":
-        console.log("View applications for job:", jobId);
-        break;
-      case "edit":
-        console.log("Edit job:", jobId);
-        break;
-      case "delete":
-        console.log("Delete job:", jobId);
-        break;
+  const handleJobAction = async (action, jobId) => {
+    if (action == "delete") {
+      const response = await deleteJob(jobId);
+      console.log(response);
     }
   };
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchUserApplications = async () => {
+      try {
+        const response = await jobCreatedByUser();
+        console.log(response, "ddd");
+        if (response && response.jobs) {
+          setApplications(response.jobs);
+        }
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserApplications();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-gray-900">Created Jobs</h2>
-        <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
-          Create New Job
-        </button>
+        <Link to={"/find-job/creat-job"}>
+          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+            Create New Job
+          </button>
+        </Link>
       </div>
-      {mockCreatedJobs.map((job) => (
+      {applications?.map((job) => (
         <JobCardProps
           key={job.id}
           job={job}

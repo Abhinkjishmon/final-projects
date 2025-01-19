@@ -21,7 +21,6 @@ function Home() {
       <Whychoose />
       <Services />
       <ArticalPreview />
-      <FAQ/>
     </>
   );
 }

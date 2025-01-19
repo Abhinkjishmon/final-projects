@@ -13,10 +13,12 @@ const notificationRoute = require("./routes/notifications.route.js");
 const jobs = require("./routes/jobsRoute.js");
 const culturalfitRoute = require("./routes/culturalfit.route.js");
 const acadamicAssistance = require("./routes/acadamicAssistance.route.js");
+const acadamicAssignment = require("./routes/acadamicAssignment.route.js");
 const visaAssistence = require("./routes/visaAndImmigartion.route.js");
 const cloudinaryConfig = require("./db/cloudinaryConfig.js");
+const { app, server } = require("./connectSocket.io.js");
 
-const app = express();
+// const app = express();
 app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "500mb" }));
@@ -29,6 +31,7 @@ app.use(`${baseURl}/notifications`, notificationRoute);
 app.use(`${baseURl}/jobs`, jobs);
 app.use(`${baseURl}/culturalfit`, culturalfitRoute);
 app.use(`${baseURl}/acadamic`, acadamicAssistance);
+app.use(`${baseURl}/acadamic`, acadamicAssignment);
 app.use(`${baseURl}/visaAndImmigartions`, visaAssistence);
 
 app.get(`${baseURl}/`, (req, res) => {
@@ -43,16 +46,14 @@ app.use(errorHandle);
 
 connectDb()
   .then(() => {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`server started at PORT ${PORT}`);
     });
     cloudinaryConfig();
   })
   .catch((err) => {
     console.log("Can not connected..!", err);
-  });
-
-// Global error handling for unexpected issues
+  });   
 process.on("unhandledRejection", (reason) => {
   console.error("Unhandled Rejection:", reason);
 });

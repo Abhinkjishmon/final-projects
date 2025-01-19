@@ -1,44 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ClassroomHeader from "./ClassroomHeader";
 import ClassroomTabs from "./ClassroomTabs";
 import ClassList from "./ClassList";
+import {
+  getClassrooms,
+  getJoinedClassrooms,
+} from "@/apiService.js/profile.service";
 
 function ClassroomPage() {
-  const myClasses = [
-    {
-      id: "1",
-      name: "Advanced Mathematics",
-      teacher: "Dr. Sarah Johnson",
-      subject: "Mathematics",
-      students: 28,
-    },
-    {
-      id: "2",
-      name: "Physics 101",
-      teacher: "Prof. Michael Chen",
-      subject: "Physics",
-      students: 24,
-    },
-  ];
-
-  const joinedClasses = [
-    {
-      id: "3",
-      name: "Web Development",
-      teacher: "Prof. Emily Rodriguez",
-      subject: "Computer Science",
-      students: 32,
-    },
-    {
-      id: "4",
-      name: "English Literature",
-      teacher: "Ms. Amanda Brown",
-      subject: "English",
-      students: 26,
-    },
-  ];
   const [activeTab, setActiveTab] = useState("my-classes");
+  const [myClasses, setClasses] = useState();
+  const [isDeleted, setDeleted] = useState(false);
+  const [joinedClasses, setjoinedClasses] = useState();
+  useEffect(() => {
+    const getCreatedClassroom = async () => {
+      const response = await getClassrooms();
+      const joinedClass = await getJoinedClassrooms();
+      setClasses(response.classrooms);
+      setjoinedClasses(joinedClass.classrooms);
+    };
+    getCreatedClassroom();
+  }, [isDeleted]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -49,9 +32,19 @@ function ClassroomPage() {
 
         <div className="mt-6">
           {activeTab === "my-classes" ? (
-            <ClassList title="My Classes" classes={myClasses} />
+            <ClassList
+              title="My Classes"
+              classes={myClasses}
+              activeTab={activeTab}
+              onDelete={() => setDeleted(true)}
+            />
           ) : (
-            <ClassList title="Joined Classes" classes={joinedClasses} />
+            <ClassList
+              title="Joined Classes"
+              classes={joinedClasses}
+              activeTab={activeTab}
+              onDelete={() => setDeleted(true)}
+            />
           )}
         </div>
       </div>

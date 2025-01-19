@@ -35,7 +35,6 @@ const getUserChats = async (req, res) => {
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
-    // Retrieve chats for the given userId sorted by timestamp
     const chats = await Chat.find({ userId })
       .populate({ path: "userId", select: "-password" })
       .sort({ timestamp: 1 });
@@ -96,8 +95,7 @@ const checkEligibility = async (req, res) => {
 `;
 
     const assistantResponse = await generateResponse(userMessage);
-
-    // Send the response to the client
+    
     res.status(200).json({ assistantResponse });
   } catch (error) {
     console.error(

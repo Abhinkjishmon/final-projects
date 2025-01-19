@@ -99,20 +99,15 @@ const updateAccommodation = async (req, res) => {
 // Delete Accommodation
 const deleteAccommodation = async (req, res) => {
   try {
-    const { id } = req.params; // Get the accommodation ID from the URL
-
-    // Find and delete the accommodation by ID
+    const { id } = req.params;
     const deletedAccommodation = await Accommodation.findByIdAndDelete(id);
-
-    // Check if accommodation exists
     if (!deletedAccommodation) {
       return res.status(404).json({ message: "Accommodation not found" });
     }
-
-    // Respond with a success message
     res.status(200).json({
       message: "Accommodation deleted successfully",
       accommodation: deletedAccommodation,
+      status: "SUCCESS",
     });
   } catch (error) {
     console.error("Error deleting accommodation:", error);
@@ -297,8 +292,6 @@ const createAppointment = async (req, res) => {
     if (!userId || !accommodationId || !date || !time) {
       return res.status(400).json({ message: "All fields are required." });
     }
-
-    // Check if the appointment already exists for the same user, accommodation, date, and time
     const existingAppointment = await appointmentModel.findOne({
       userId,
       accommodationId,
@@ -312,7 +305,6 @@ const createAppointment = async (req, res) => {
         .json({ message: "An appointment already exists for this time." });
     }
 
-    // Create a new appointment
     const appointment = new appointmentModel({
       userId,
       accommodationId,
@@ -346,9 +338,7 @@ const updateAppointment = async (req, res) => {
   try {
     const { appointmentId } = req.params;
     const { status } = req.body;
-
-    // Validate status
-    const validStatuses = ["request", "approve", "cancel"];
+    const validStatuses = ["request", "approved", "rejected"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         message: `Invalid status. Allowed statuses are: ${validStatuses.join(
@@ -356,8 +346,6 @@ const updateAppointment = async (req, res) => {
         )}.`,
       });
     }
-
-    // Find and update the appointment
     const updatedAppointment = await appointmentModel.findByIdAndUpdate(
       appointmentId,
       { status, updatedAt: new Date() },
@@ -371,10 +359,113 @@ const updateAppointment = async (req, res) => {
     res.status(200).json({
       message: "Appointment updated successfully.",
       updatedAppointment,
+      status: "SUCCESS",
     });
   } catch (error) {
     console.error("Error updating appointment:", error);
     res.status(500).json({ message: "Failed to update appointment.", error });
+  }
+};
+
+const getAccommodationsByUser = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+    const accommodations = await Accommodation.find({ landlordId: userId });
+
+    if (accommodations.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No accommodations found for this user." });
+    }
+
+    return res.status(200).json({
+      message: "Accommodations retrieved successfully.",
+      accommodations,
+    });
+  } catch (error) {
+    console.error("Error fetching accommodations:", error);
+    return res.status(500).json({ message: "Internal server error.", error });
+  }
+};
+
+const getWishlistedAccommodations = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+    const wishlist = await AccommodationsWishlistModel.findOne({
+      userId,
+    }).populate({
+      path: "accommodations",
+      select: "title address rent images roomType _id", // Fields to include
+    });
+
+    if (!wishlist || wishlist.accommodations.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No wishlisted accommodations found for this user." });
+    }
+
+    return res.status(200).json({
+      message: "Wishlisted accommodations retrieved successfully.",
+      accommodations: wishlist.accommodations,
+    });
+  } catch (error) {
+    console.error("Error fetching wishlisted accommodations:", error);
+    return res.status(500).json({ message: "Internal server error.", error });
+  }
+};
+
+const getAppointmentsForUserAccommodations = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+    const accommodations = await Accommodation.find({
+      landlordId: userId,
+    }).select("_id");
+
+    if (!accommodations || accommodations.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No accommodations found for this user." });
+    }
+    const accommodationIds = accommodations.map(
+      (accommodation) => accommodation._id
+    );
+
+    const appointments = await appointmentModel
+      .find({
+        accommodationId: { $in: accommodationIds },
+      })
+      .populate({
+        path: "userId",
+        select: "name email",
+      })
+      .populate({
+        path: "accommodationId",
+        select: "title address",
+      });
+    if (!appointments || appointments.length === 0) {
+      return res.status(404).json({
+        message:
+          "No appointments found for the accommodations created by this user.",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Appointments retrieved successfully.",
+      appointments,
+    });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    return res.status(500).json({ message: "Internal server error.", error });
   }
 };
 
@@ -389,4 +480,7 @@ module.exports = {
   getAccommodationDetailsWithSuggestions,
   createAppointment,
   updateAppointment,
+  getAccommodationsByUser,
+  getWishlistedAccommodations,
+  getAppointmentsForUserAccommodations,
 };

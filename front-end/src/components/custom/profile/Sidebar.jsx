@@ -1,14 +1,23 @@
 import React, { useEffect } from "react";
 import { Home, User, Image, Bell, Settings } from "lucide-react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaUserEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "@/redux/userInfoSlice";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Sidebar = () => {
   const { profileInfo } = useSelector((state) => state.userProfile);
   const dispatch = useDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchUserProfile(id));
@@ -31,10 +40,15 @@ const Sidebar = () => {
           text: "Edit Profile",
           href: "/edit-profile",
         },
-        { icon: Settings, text: "Log Out", href: "/logout" },
       ];
     }
     return menuItems;
+  };
+  const handleLogout = () => {
+    localStorage.clear();
+   
+    navigate("/signin");
+    window.location.reload();
   };
 
   return (
@@ -63,6 +77,40 @@ const Sidebar = () => {
               </Link>
             </li>
           ))}
+
+          <Dialog>
+            <DialogTrigger>
+              <li className="flex px-3 gap-3">
+                <Settings className="w-6 h-6" />
+                <span className="md:hidden lg:inline">Log Out</span>
+              </li>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogDescription>
+                  <div className="flex items-center justify-center">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-md text-center">
+                      <h2 className="text-xl font-bold mb-4 text-gray-800">
+                        Confirm Logout
+                      </h2>
+                      <p className="text-gray-600 mb-6">
+                        Are you sure you want to log out of your account?
+                      </p>
+                      <div className="flex justify-center space-x-4">
+                        <button
+                          onClick={handleLogout}
+                          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded transition duration-200"
+                        >
+                          Logout
+                        </button>
+
+                      </div>
+                    </div>
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </ul>
       </nav>
     </div>

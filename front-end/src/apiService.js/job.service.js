@@ -86,3 +86,16 @@ export const featuredjobs = async () => {
     return { status: "FAILD", message };
   }
 };
+export const searchForJob = async (title, location) => {
+  try {
+    const { data } = await axiosInstance.post(
+      apiEndpoints.job.search(title, location)
+    );
+    return data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+    return { status: "FAILD", message };
+  }
+};

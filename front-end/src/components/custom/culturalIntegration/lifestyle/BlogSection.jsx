@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { BlogCard } from "../..";
-import { scrollToTop } from "@/utils/scroll";
+
 
 const BlogSection = ({ title, description, image, blogPosts }) => {
   return (

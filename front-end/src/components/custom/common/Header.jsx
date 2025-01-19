@@ -3,10 +3,13 @@ import { Menu, X, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { getLocalStorageItem } from "@/utils/localStorage";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = useSelector((state) => state.user.user);
+  const { userId, fullname, profileImg, username } =
+    getLocalStorageItem("user");
 
   const menuItems = [
     { label: "Find Accommodations", href: "/find-accommodations" },
@@ -20,7 +23,7 @@ function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <span className="text-2xl font-bold text-blue-600">Logo</span>
+            <span className="text-2xl font-bold text-blue-600">Easy Way</span>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
@@ -34,14 +37,14 @@ function Header() {
               </a>
             ))}
           </div>
-          <Link to={`/profile/${user.userId}`}>
-            {user ? (
+          <Link to={`/profile/${userId}`}>
+            {userId ? (
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-700">{user.username}</span>
+                <span className="text-sm text-gray-700">{username}</span>
                 <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
                   <img
-                    src={user.profileImg}
-                    alt={user.username}
+                    src={profileImg}
+                    alt={fullname}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -73,8 +76,6 @@ function Header() {
             </button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden py-4">
             <div className="flex flex-col space-y-4">

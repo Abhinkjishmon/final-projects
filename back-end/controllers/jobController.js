@@ -22,13 +22,10 @@ const addJob = async (req, res) => {
       userId,
     } = req.body;
 
-    // Validate the userId
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Create a new Job instance
     const newJob = new Job({
       title,
       description,
@@ -44,11 +41,7 @@ const addJob = async (req, res) => {
       category,
       userId,
     });
-
-    // Save the job to the database
     const savedJob = await newJob.save();
-
-    // Return a success response
     res.status(201).json({
       status: "SUCCESS",
       message: "Job created successfully",
@@ -81,8 +74,7 @@ const addApplication = async (req, res) => {
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
-    // Validate the jobId
-    // Check if the user has already applied for the job
+
     const existingApplication = await Application.find({
       userId,
       jobId,
@@ -90,7 +82,7 @@ const addApplication = async (req, res) => {
     if (existingApplication.length > 0) {
       return res.status(400).json({ message: "Already applied to the job" });
     }
-    // Create a new Application instance
+
     const newApplication = new Application({
       jobId,
       candidateName,
@@ -103,11 +95,7 @@ const addApplication = async (req, res) => {
       status,
       userId,
     });
-
-    // Save the application to the database
     const savedApplication = await newApplication.save();
-
-    // Return a success response
     res.status(201).json({
       status: "SUCCESS",
       message: "Application submitted successfully",
@@ -127,16 +115,14 @@ const getJobWithSimilarJobs = async (req, res) => {
   const { userId } = req.body;
 
   try {
-    // Fetch the job by ID
     const job = await Job.findById(id);
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
 
-    // Fetch 5 similar jobs with the same category, excluding the current job
     const similarJobs = await Job.find({
       category: job.category,
-      _id: { $ne: id }, // Exclude the current job
+      _id: { $ne: id },
     })
       .limit(5)
       .exec();
@@ -164,24 +150,20 @@ const updateJob = async (req, res) => {
   try {
     const { jobId } = req.params;
     const { userId } = req.body;
-
-    // Find the job
     const job = await Job.findById(jobId);
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
 
-    // Check if the logged-in user is the creator of the job
     if (job.userId.toString() !== userId) {
       return res
         .status(403)
         .json({ message: "You are not authorized to update this job" });
     }
 
-    // Update the job with the new data
     const updatedJob = await Job.findByIdAndUpdate(jobId, req.body, {
-      new: true, // Return the updated document
-      runValidators: true, // Ensure the updated data adheres to the schema
+      new: true,
+      runValidators: true,
     });
 
     res.status(200).json({ message: "Job updated successfully", updatedJob });
@@ -199,22 +181,16 @@ const updateJob = async (req, res) => {
 const deleteJob = async (req, res) => {
   try {
     const { jobId } = req.params;
-    const { userId } = req.body; // Assuming the userId is sent in the request body for validation
-
-    // Find the job
+    const { userId } = req.body;
     const job = await Job.findById(jobId);
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
-
-    // Check if the logged-in user is the creator of the job
     if (job.userId.toString() !== userId) {
       return res
         .status(403)
         .json({ message: "You are not authorized to delete this job" });
     }
-
-    // Delete the job
     await job.deleteOne();
 
     res.status(200).json({ message: "Job deleted successfully" });
@@ -233,26 +209,19 @@ const saveJob = async (req, res) => {
   try {
     const { userId } = req.body;
     const { jobId } = req.params;
-
-    // Validate userId
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Validate jobId
     const job = await Job.findById(jobId);
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
-
-    // Check if the job is already saved by the user
     const existingSavedJob = await SavedJob.findOne({ userId, jobId });
     if (existingSavedJob) {
       return res.status(400).json({ message: "Job already saved" });
     }
 
-    // Save the job
     const savedJob = new SavedJob({ userId, jobId });
     await savedJob.save();
 
@@ -273,16 +242,12 @@ const saveJob = async (req, res) => {
 const getSavedJobs = async (req, res) => {
   try {
     const { userId } = req.body;
-
-    // Validate userId
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Fetch saved jobs for the user
     const savedJobs = await SavedJob.find({ userId })
-      .populate("jobId", "title company location description") // Populate job details
+      .populate("jobId", "title company location description")
       .exec();
 
     res.status(200).json({ savedJobs });
@@ -299,17 +264,13 @@ const getSavedJobs = async (req, res) => {
  */
 const getAllJobs = async (req, res) => {
   try {
-    // Extract the 'category' query parameter
     const { category } = req.query;
 
     let filter = {};
-
-    // Check the category and update the filter accordingly
     if (category && category !== "All") {
       filter = { category };
     }
     console.log(filter);
-    // Fetch jobs based on the filter
     const jobs = await Job.find(filter);
 
     res.status(200).json({ jobs });
@@ -326,7 +287,6 @@ const getAllJobs = async (req, res) => {
  */
 const getLatestJobs = async (req, res) => {
   try {
-    // Fetch the 10 latest jobs, sorted by the 'createdAt' field in descending order
     const latestJobs = await Job.find().sort({ createdAt: -1 }).limit(10);
     res.status(200).json({ latestJobs });
   } catch (error) {
@@ -339,7 +299,7 @@ const getLatestJobs = async (req, res) => {
 const getFeaturedJobs = async (req, res) => {
   try {
     const featuredJobs = await Job.find({ status: "Open" })
-      .sort({ postedDate: -1 }) 
+      .sort({ postedDate: -1 })
       .limit(10);
     res.status(200).json({
       success: true,
@@ -347,7 +307,6 @@ const getFeaturedJobs = async (req, res) => {
       data: featuredJobs,
     });
   } catch (error) {
-    // Handle errors if any occur during the database query
     res.status(500).json({
       success: false,
       message: "Error fetching featured jobs",
@@ -361,12 +320,8 @@ const getFeaturedJobs = async (req, res) => {
  */
 const getJobsByUser = async (req, res) => {
   try {
-    const { userId } = req.body; // Extract userId from the request params
-
-    // Fetch jobs created by the user
-    const jobs = await Job.find({ userId }).populate("userId", "name email"); // Optionally populate user details if needed
-
-    // If no jobs are found for the user
+    const { userId } = req.body;
+    const jobs = await Job.find({ userId }).populate("userId", "name email");
     if (!jobs || jobs.length === 0) {
       return res.status(404).json({ message: "No jobs found for this user" });
     }
@@ -385,29 +340,33 @@ const getJobsByUser = async (req, res) => {
  */
 const updateApplicationStatus = async (req, res) => {
   try {
-    const { applicationId } = req.params; // Get the applicationId from request params
-    const { status } = req.body; // Get the status from the request body (e.g., 'interviewing', 'hired', 'rejected')
-
-    // Validate status
-    const validStatuses = ["applied", "interviewing", "hired", "rejected"];
+    const { applicationId } = req.params;
+    const { status } = req.body;
+    console.log(status);
+    const validStatuses = [
+      "Shortlisted",
+      "Interviewed",
+      "Rejected",
+      "Selected",
+    ];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
-
-    // Find and update the application status
     const application = await Application.findByIdAndUpdate(
       applicationId,
-      { status }, // Update the status field
-      { new: true } // Return the updated document
+      { status },
+      { new: true }
     );
 
     if (!application) {
       return res.status(404).json({ message: "Application not found" });
     }
 
-    res
-      .status(200)
-      .json({ message: "Application status updated", application });
+    res.status(200).json({
+      message: "Application status updated",
+      application,
+      status: "SUCCESS",
+    });
   } catch (error) {
     console.error("Error updating application status:", error);
     res.status(500).json({
@@ -422,14 +381,10 @@ const updateApplicationStatus = async (req, res) => {
  */
 const getApplicationsForJob = async (req, res) => {
   try {
-    const { jobId } = req.params; // Get jobId from request params
-
-    // Fetch applications for the specified job
+    const { jobId } = req.params;
     const applications = await Application.find({ jobId })
-      .populate("userId", "name email") // Optionally populate candidate details
-      .populate("jobId", "title description"); // Optionally populate job details
-
-    // If no applications are found for the job
+      .populate("userId", "name email")
+      .populate("jobId", "title employmentType company");
     if (!applications || applications.length === 0) {
       return res
         .status(404)
@@ -446,6 +401,54 @@ const getApplicationsForJob = async (req, res) => {
   }
 };
 
+const getUserApplications = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    console.log(userId);
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+
+    const userApplications = await Application.find({ userId }).populate(
+      "jobId",
+      "title description location  company _id postedDate"
+    );
+    if (userApplications.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No applications found for this user." });
+    }
+
+    res.status(200).json({
+      message: "Applications fetched successfully.",
+      applications: userApplications,
+    });
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+
+const searchJobs = async (req, res) => {
+  const { title, location } = req.query;
+
+  try {
+    const searchConditions = {};
+
+    if (title) {
+      searchConditions.title = { $regex: title, $options: "i" };
+    }
+
+    if (location) {
+      searchConditions.location = { $regex: location, $options: "i" };
+    }
+    const jobs = await Job.find(searchConditions);
+    return res.status(200).json({ jobs });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error fetching jobs" });
+  }
+};
 module.exports = {
   addJob,
   addApplication,
@@ -460,4 +463,6 @@ module.exports = {
   getApplicationsForJob,
   getJobWithSimilarJobs,
   getFeaturedJobs,
+  getUserApplications,
+  searchJobs
 };

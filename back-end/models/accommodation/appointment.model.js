@@ -4,20 +4,20 @@ const appointmentSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Assuming you have a User model
+      ref: "User",
       required: true,
     },
     accommodationId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Accommodation", // Assuming you have an Accommodation model
+      ref: "Accommodation",
       required: true,
     },
-    phoneNumber:{
-      type:String,
-      require:true,
+    phoneNumber: {
+      type: String,
+      require: true,
     },
-    specialRequests:{
-      type:String,
+    specialRequests: {
+      type: String,
     },
     date: {
       type: Date,
@@ -35,7 +35,7 @@ const appointmentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["request", "approve", "cancel"],
+      enum: ["request", "approved", "rejected"],
       required: true,
       default: "request",
     },

@@ -10,6 +10,13 @@ const {
   getAllClassrooms,
   getStudyMaterialsForClassroom,
   deleteClassroom,
+  acadamicAIChat,
+  getAcademicAIChats,
+  createSession,
+  getSessionsByClassroom,
+  getChatsByClassroom,
+  getClassroomsByUser,
+  getParticipantClassrooms,
 } = require("../controllers/acadamicAssistanceController");
 const multer = require("multer");
 const storage = multer.memoryStorage();
@@ -34,6 +41,7 @@ router.post("/classrooms/:classroomId/leave", isAuthorizedUser, leaveClassroom);
 // Route to add study material
 router.post(
   "/classrooms/:classroomId/study-material",
+  upload.single("file"),
   isAuthorizedUser,
   addStudyMaterial
 );
@@ -53,4 +61,32 @@ router.get(
 // Route to delete a specific classroom
 router.delete("/classrooms/:classroomId", isAuthorizedUser, deleteClassroom);
 
+// Route to chat boat
+router.post("/classrooms/AIChat", isAuthorizedUser, acadamicAIChat);
+//get previous chats
+router.get("/previouschat", isAuthorizedUser, getAcademicAIChats);
+
+// Route to create a live session
+router.post(
+  "/createlive/:classroomId",
+  upload.single("thumbnail"),
+  isAuthorizedUser,
+  createSession
+);
+// Route to fetch all sessions related to a specific classroom by classroomId
+router.get("/get-live/:classroomId", isAuthorizedUser, getSessionsByClassroom);
+
+// Fetch all chat messages for a specific classroom
+router.get(
+  "/classroom/group-chat/:classroomId",
+  isAuthorizedUser,
+  getChatsByClassroom
+);
+
+router.post("/user/classrooms", isAuthorizedUser, getClassroomsByUser);
+router.post(
+  "/user/participant-classrooms",
+  isAuthorizedUser,
+  getParticipantClassrooms
+);
 module.exports = router;

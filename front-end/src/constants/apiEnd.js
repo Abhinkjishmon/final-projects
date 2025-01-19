@@ -13,6 +13,8 @@ const apiEndpoints = {
     jobApplication: (jobId) => `/jobs/applications/${jobId}`,
     getLatestJobs: "/jobs/latest",
     featuredjobs: "/jobs/featured-jobs",
+    search: (title, location) =>
+      `/jobs/search?title=${title}&location=${location}`,
   },
   accommodation: {
     newAccommodation: "/accommodation/new-accommodations",
@@ -40,12 +42,48 @@ const apiEndpoints = {
     previousChat: "/visaAndImmigartions/get-chat",
     checkEligibility: "/visaAndImmigartions/check-eligibility",
   },
-  acadamic: {
+  academic: {
     newClass: "/acadamic/new-classroom",
     getAllClassRoom: "/acadamic/classrooms",
     getOneClass: (classroomId) => `/acadamic/classrooms/${classroomId}`,
     joinClassRoom: (classroomId) => `/acadamic/classrooms/${classroomId}/join`,
-    getClassRoomDetails: () => `/classrooms/${classroomId}`,
+    leaveClassRoom: (classroomId) =>
+      `/acadamic/classrooms/${classroomId}/leave`,
+    newStudyResources: (classroomId) =>
+      `/acadamic/classrooms/${classroomId}/study-material`,
+    StudyResources: (classroomId) =>
+      `/acadamic/classrooms/${classroomId}/study-materials`,
+    createAssignment: "/acadamic/assignments",
+    getAssignments: (classroomId) => `/acadamic/assignments/${classroomId}`,
+    updateAssignment: "/acadamic/assignments",
+    deleteAssignment: () => `/acadamic/assignments`,
+    assignmentSubmit: "/acadamic/assignments/submit",
+    assignmentSubmitted: (classroomId) =>
+      `/acadamic/assignments/isAssignmentSubmitted/${classroomId}`,
+    academicAIchat: "/acadamic/classrooms/AIChat",
+    academicAIPreviouschat: "/acadamic/previouschat",
+    addLiveSessions: (classroomId) => `/acadamic/createlive/${classroomId}`,
+    getLiveSession: (classroomId) => `/acadamic/get-live/${classroomId}`,
+    groupChats: (classroomId) =>
+      `/acadamic/classroom/group-chat/${classroomId}`,
+  },
+  profile: {
+    getUserBlogs: "/culturalfit/user/blogs",
+    getAppliedJob: "/jobs/applied",
+    getCreatedJobs: "/jobs/user",
+    deleteJob: (jobId) => `/jobs/${jobId}`,
+    getApplicationOFJob: (jobId) => `/jobs/applications/${jobId}`,
+    updateApplicationStatus: (applicationId) =>
+      `/jobs/update-status/${applicationId}`,
+    getUserCreatedAccomodation: "/accommodation/get-user-accommodation",
+    deleteAccomodation: (id) => `/accommodation/delete-accommodations/${id}`,
+    getWhishlist: `/accommodation/get-whishlist`,
+    getAppointment: `/accommodation/user/accommodation-appointments`,
+    updateAppointment: (appointmentId) =>
+      `/accommodation/appointments/${appointmentId}`,
+    getCreatedClassRoom: "acadamic/user/classrooms",
+    getJoinedClassroom: "/acadamic/user/participant-classrooms",
+    deleteClassroom: (classroomId) => `/acadamic/classrooms/${classroomId}`,
   },
   liveNews: {
     getLiveNews: `https://newsdata.io/api/1/latest?apikey=pub_50304e39cfbce9f3f75e11b4b7906c0d2e3c8&country=gb`,

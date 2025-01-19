@@ -10,6 +10,9 @@ const {
   getAccommodationDetailsWithSuggestions,
   createAppointment,
   updateAppointment,
+  getAccommodationsByUser,
+  getWishlistedAccommodations,
+  getAppointmentsForUserAccommodations,
 } = require("../controllers/findAccomadtionsController");
 const { isAuthorizedUser } = require("../middleware/verifyjwt");
 const multer = require("multer");
@@ -62,5 +65,17 @@ router.post("/appointments", isAuthorizedUser, createAppointment);
 
 // Update an appointment
 router.put("/appointments/:appointmentId", isAuthorizedUser, updateAppointment);
+router.post(
+  "/user/accommodation-appointments",
+  isAuthorizedUser,
+  getAppointmentsForUserAccommodations
+);
+
+router.post(
+  "/get-user-accommodation",
+  isAuthorizedUser,
+  getAccommodationsByUser
+);
+router.post("/get-whishlist", isAuthorizedUser, getWishlistedAccommodations);
 
 module.exports = router;

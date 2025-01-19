@@ -5,18 +5,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function ClassRoom() {
+
   const { id } = useParams();
   const [classRoomDetails, setClassRoom] = useState();
   useEffect(() => {
     scrollToTop();
     const fetchClassRoomDetails = async (id) => {
       const response = await getOneClassRooms(id);
-      console.log(response);
       setClassRoom(response);
     };
     fetchClassRoomDetails(id);
   }, []);
-  
   return (
     <>
       <div className="flex h-screen bg-gray-50 ">

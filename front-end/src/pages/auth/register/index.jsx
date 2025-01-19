@@ -196,30 +196,6 @@ function Register() {
                 <p className="text-red-500 text-sm">{errors.password}</p>
               )}
             </div>
-
-            {/* Remember Me */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="rememberMe"
-                  className="h-4 w-4 text-blue-500 border-gray-300 rounded"
-                  checked={formData.rememberMe}
-                  onChange={handleChange}
-                />
-                <label className="ml-2 text-sm text-gray-600">
-                  Remember me
-                </label>
-              </div>
-              <button
-                type="button"
-                className="text-sm text-blue-500 hover:text-blue-600"
-              >
-                Reset Password!
-              </button>
-            </div>
-
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"

@@ -1,10 +1,17 @@
-import React from "react";
-import { Clock, Users, ChevronRight } from "lucide-react";
-import { joinClassRooms } from "@/apiService.js/acadamic.service";
+import React, { useEffect, useState } from "react";
+import {
+  joinClassRooms,
+  leaveClassRooms,
+} from "@/apiService.js/acadamic.service";
 import { toast } from "react-toastify";
+import { getLocalStorageItem } from "@/utils/localStorage";
 
 const CourseInfo = ({ classRoomDetails }) => {
-  const toggleClassRoom = async () => {
+  const { userId } = getLocalStorageItem("user");
+  const [isUserparticipants, setparticipant] = useState();
+
+  const joinClassRoom = async () => {
+    setparticipant(true);
     const response = await joinClassRooms(classRoomDetails._id);
     if (response.status !== "SUCCESS") {
       toast.error(response.message);
@@ -12,6 +19,24 @@ const CourseInfo = ({ classRoomDetails }) => {
       toast.success(response.message);
     }
   };
+  const leaveClassRoom = async () => {
+    setparticipant(false);
+    const response = await leaveClassRooms(classRoomDetails._id);
+    if (response.status !== "SUCCESS") {
+      toast.error(response.message);
+    } else {
+      toast.success(response.message);
+    }
+  };
+
+  useEffect(() => {
+    if (classRoomDetails?.participants) {
+      const isUserAlreadyJoined = classRoomDetails.participants.find(
+        (data) => data.userId && data.userId._id === userId
+      );
+      setparticipant(isUserAlreadyJoined);
+    }
+  }, [classRoomDetails]);
   return (
     <div className="bg-white p-6 rounded-lg">
       <h1 className="text-2xl font-bold mb-2">{classRoomDetails?.title}</h1>
@@ -26,13 +51,25 @@ const CourseInfo = ({ classRoomDetails }) => {
             {classRoomDetails?.createdBy?.fullname}
           </span>
         </div>
+        <span className="text-gray-600">
+          Total Students ({classRoomDetails?.participants.length})
+        </span>
         <span className="text-gray-400">•</span>
-        <button
-          className="text-blue-500 hover:text-blue-600"
-          onClick={toggleClassRoom}
-        >
-          Join Class Room
-        </button>
+        {isUserparticipants ? (
+          <button
+            className="text-blue-500 border border-black p-2 rounded-md hover:text-blue-600"
+            onClick={leaveClassRoom}
+          >
+            Leave Class Room
+          </button>
+        ) : (
+          <button
+            className="text-blue-500 border border-black p-2 rounded-md hover:text-blue-600"
+            onClick={joinClassRoom}
+          >
+            Join Class Room
+          </button>
+        )}
       </div>
 
       <div className="flex space-x-4 border-b border-gray-200 mb-6">

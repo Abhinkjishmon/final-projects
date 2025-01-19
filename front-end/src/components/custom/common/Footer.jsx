@@ -6,107 +6,61 @@ function Footer() {
     <footer className="bg-slate-900 text-gray-300 py-12 px-4">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-indigo-600 rounded-full"></div>
-              <span className="text-white text-xl font-semibold">
-                Easy Way
-              </span>
+              <span className="text-white text-xl font-semibold">Easy Way</span>
             </div>
             <p className="text-sm text-gray-400 max-w-xs">
-              Great platform for the job seeker that passionate about startups.
-              Find your dream job easier.
+              A great platform for international students passionate about
+              learning and exploration. Discover opportunities, pursue your
+              dreams, and shape your future career with us!
             </p>
           </div>
-
-          {/* About Links */}
           <div>
             <h3 className="text-white font-semibold mb-4">About</h3>
             <ul className="space-y-3">
               <li>
                 <a
-                  href="#"
+                  href="/find-accommodations"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Companies
+                  Find Accommodations
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/find-job"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Pricing
+                  Part Time Job
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/culturalIntergretion"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Terms
+                  Cultural Integration
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/visaImmigrationAssistance"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Advice
+                  Visa Assistance
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/acadamic"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Privacy Policy
+                  Academic
                 </a>
               </li>
             </ul>
           </div>
-
-          {/* Resources Links */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Resources</h3>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href="#"
-                  className="text-sm hover:text-white transition-colors"
-                >
-                  Help Docs
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm hover:text-white transition-colors"
-                >
-                  Guide
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm hover:text-white transition-colors"
-                >
-                  Updates
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm hover:text-white transition-colors"
-                >
-                  Contact Us
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Newsletter */}
           <div>
             <h3 className="text-white font-semibold mb-4">
               Get job notifications
@@ -129,12 +83,7 @@ function Footer() {
             </form>
           </div>
         </div>
-
-        {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-gray-400 mb-4 md:mb-0">
-            2021 © JobHuntly. All rights reserved.
-          </p>
           <div className="flex space-x-4">
             <a
               href="#"

@@ -1,43 +1,48 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import JobCardProps from "./JobCardProps";
-
-// Mock data - In a real app, this would come from an API
-const mockAppliedJobs = [
-  {
-    id: "1",
-    title: "Senior Frontend Developer",
-    company: "Tech Solutions Inc.",
-    location: "San Francisco, CA",
-    type: "Full-time",
-    salary: "$120k - $150k",
-    description: "Looking for an experienced frontend developer...",
-    requirements: ["5+ years React experience", "TypeScript", "CSS"],
-    postedDate: "2024-03-10",
-    status: "pending",
-  },
-  {
-    id: "2",
-    title: "Full Stack Engineer",
-    company: "Innovation Labs",
-    location: "Remote",
-    type: "Full-time",
-    salary: "$130k - $160k",
-    description: "Join our dynamic team...",
-    requirements: ["Node.js", "React", "PostgreSQL"],
-    postedDate: "2024-03-08",
-    status: "interview",
-  },
-];
+import { getAppliedJobByUser } from "@/apiService.js/profile.service";
 
 function AppliedJobs() {
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserApplications = async () => {
+      try {
+        const response = await getAppliedJobByUser();
+        if (response && response.applications) {
+          setApplications(response.applications);
+          console.log(response)
+        }
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserApplications();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-900">Applied Jobs</h2>
-      {mockAppliedJobs.map((job) => (
-        <JobCardProps key={job.id} job={job} type="applied" />
-      ))}
+      {applications.length > 0 ? (
+        applications.map((application) => (
+          <JobCardProps
+            key={application._id}
+            job={application}
+            type="applied"
+          />
+        ))
+      ) : (
+        <p>No applied jobs found.</p>
+      )}
     </div>
   );
 }
+
 export default AppliedJobs;

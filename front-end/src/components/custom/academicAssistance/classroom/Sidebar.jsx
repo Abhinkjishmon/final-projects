@@ -25,11 +25,6 @@ const Sidebar = () => {
       href: `/acadamic/class-room/${id}/chats`,
     },
     {
-      name: "Daily task",
-      icon: <MdOutlineTaskAlt />,
-      href: `/acadamic/class-room/${id}/daily-task`,
-    },
-    {
       name: "Assignments",
       icon: <MdOutlineAssignment />,
       href: `/acadamic/class-room/${id}/assignments`,

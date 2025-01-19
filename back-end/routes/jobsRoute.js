@@ -16,6 +16,8 @@ const {
   getApplicationsForJob,
   getJobWithSimilarJobs,
   getFeaturedJobs,
+  getUserApplications,
+  searchJobs,
 } = require("../controllers/jobController");
 
 const router = express.Router();
@@ -47,7 +49,7 @@ router.get("/all", isAuthorizedUser, getAllJobs);
 // Route to get latest jobs
 router.get("/latest", isAuthorizedUser, getLatestJobs);
 
-router.get("/user", isAuthorizedUser, getJobsByUser);
+router.post("/user", isAuthorizedUser, getJobsByUser);
 
 // Route to update the status of a job application
 router.put(
@@ -60,5 +62,9 @@ router.post("/featured-jobs", isAuthorizedUser, getFeaturedJobs);
 
 // Route to get all applications for a particular job
 router.get("/applications/:jobId", isAuthorizedUser, getApplicationsForJob);
+
+//routes to get job applied by user
+router.post("/applied", isAuthorizedUser, getUserApplications);
+router.post("/search",isAuthorizedUser, searchJobs);
 
 module.exports = router;

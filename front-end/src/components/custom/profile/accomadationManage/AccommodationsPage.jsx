@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Home, Calendar, Heart } from "lucide-react";
 import AccommodationCard from "./AccommodationCard";
 import AppointmentCard from "./AppointmentCard";
+import {
+  getAccomodation,
+  getAppointments,
+  getWhishlistAccomodation,
+} from "@/apiService.js/profile.service";
 
 function AccommodationsPage() {
   const mockMyAccommodations = [
@@ -63,14 +68,32 @@ function AccommodationsPage() {
       dateAdded: "2024-03-15",
     },
   ];
-
+  const [myAccommodations, setmyAccommodations] = useState([]);
+  const [myAppointments, setAppointments] = useState([]);
+  const [myAccommodationsWhishlist, setmyAccommodationsWhishlist] = useState(
+    []
+  );
   const [activeTab, setActiveTab] = React.useState("accommodations");
+  const [isDeleted, setDeleted] = useState(false);
 
   const tabs = [
     { id: "accommodations", label: "My Accommodations", icon: Home },
     { id: "appointments", label: "Appointments", icon: Calendar },
     { id: "wishlist", label: "Wishlist", icon: Heart },
   ];
+
+  useEffect(() => {
+    const fetchUserAccomodation = async () => {
+      const response = await getAccomodation();
+      const whishlistResponce = await getWhishlistAccomodation();
+      const getAppintment = await getAppointments();
+      console.log(getAppintment);
+      setAppointments(getAppintment.appointments);
+      setmyAccommodationsWhishlist(whishlistResponce.accommodations);
+      setmyAccommodations(response.accommodations);
+    };
+    fetchUserAccomodation();
+  }, [isDeleted]);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -99,15 +122,17 @@ function AccommodationsPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activeTab === "accommodations" &&
-              mockMyAccommodations.map((accommodation) => (
+              myAccommodations?.map((accommodation) => (
                 <AccommodationCard
-                  key={accommodation.id}
+                  key={accommodation._id}
                   accommodation={accommodation}
+                  onDelete={() => setDeleted(true)}
+                  activeTab={activeTab}
                 />
               ))}
 
             {activeTab === "appointments" &&
-              mockAppointments.map((appointment) => (
+              myAppointments.map((appointment) => (
                 <AppointmentCard
                   key={appointment.id}
                   appointment={appointment}
@@ -115,11 +140,13 @@ function AccommodationsPage() {
               ))}
 
             {activeTab === "wishlist" &&
-              mockWishlist.map((accommodation) => (
+              myAccommodationsWhishlist?.map((accommodation) => (
                 <AccommodationCard
                   key={accommodation.id}
                   accommodation={accommodation}
                   showStatus={false}
+                  activeTab={activeTab}
+                  onDelete={() => setDeleted(true)}
                 />
               ))}
           </div>

@@ -88,13 +88,6 @@ function Services() {
         "Enhance your learning experience with personalized academic support.",
       path: "/acadamic",
     },
-    {
-      title: "Career Guidance",
-      icon: CircleDot,
-      description:
-        "Plan your future with expert advice and tools for career success.",
-      path: "/",
-    },
   ];
 
   return (

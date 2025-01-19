@@ -8,6 +8,7 @@ const {
   getBlogs,
   getOneBlogs,
   getFeaturedBlogs,
+  getUserBlogs,
 } = require("../controllers/culturalfitController");
 const { isAuthorizedUser } = require("../middleware/verifyjwt");
 const {
@@ -50,7 +51,10 @@ router.get("/events/:eventId", isAuthorizedUser, getEventById);
 // Route for adding an event
 router.post("/add-event", upload.single("poster"), isAuthorizedUser, addEvent);
 
-// Route for deleting an event (soft delete)
+// Route for deleting an event
 router.delete("/delete-event/:eventId", isAuthorizedUser, deleteEvent);
+
+// Route for fetching blogs of a specific user
+  router.get("/user/blogs", isAuthorizedUser, getUserBlogs);
 
 module.exports = router;

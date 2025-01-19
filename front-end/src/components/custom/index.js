@@ -88,3 +88,6 @@ export { default as LandingSection } from "./culturalIntegration/LandingSection"
 export { default as EventNotices } from "./culturalIntegration/EventNotices";
 export { default as EventForm } from "./culturalIntegration/eventNotices/EventForm";
 
+export { default as AssignmentCard } from "./academicAssistance/classroom/AssignmentCard";
+export { default as AssignmentDetails } from "./academicAssistance/classroom/AssignmentDetails";
+export { default as CreateAssignmentForm } from "./academicAssistance/classroom/CreateAssignmentForm";

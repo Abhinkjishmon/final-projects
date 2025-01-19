@@ -1,89 +1,112 @@
-import { Rightbar, Sidebar } from "@/components/custom";
-import { Button } from "@/components/ui/button";
-import React, { useRef } from "react";
+import {
+  AssignmentCard,
+  AssignmentDetails,
+  CreateAssignmentForm,
+  Rightbar,
+  Sidebar,
+} from "@/components/custom";
+import React, { useEffect, useRef, useState } from "react";
+import { PlusCircle } from "lucide-react";
+import { useParams } from "react-router-dom";
+import {
+  getAssignments,
+  getOneClassRooms,
+  isAssignmentSubmitted,
+} from "@/apiService.js/acadamic.service";
+import { getLocalStorageItem } from "@/utils/localStorage";
 
 const Assignments = () => {
-  // Sample assignments data
-  const assignments = [
-    {
-      id: 1,
-      title: "Math Assignment 1",
-      description: "Solve the problems in the worksheet.",
-      submissionTime: "2024-12-20 5:00 PM",
-    },
-    {
-      id: 2,
-      title: "Science Project",
-      description: "Create a model of the solar system.",
-      submissionTime: "2024-12-22 10:00 AM",
-    },
-    {
-      id: 3,
-      title: "History Essay",
-      description: "Write an essay on the French Revolution.",
-      submissionTime: "2024-12-25 6:00 PM",
-    },
-    {
-      id: 3,
-      title: "History Essay",
-      description: "Write an essay on the French Revolution.",
-      submissionTime: "2024-12-25 6:00 PM",
-    },
-    {
-      id: 3,
-      title: "History Essay",
-      description: "Write an essay on the French Revolution.",
-      submissionTime: "2024-12-25 6:00 PM",
-    },
-    {
-      id: 3,
-      title: "History Essay",
-      description: "Write an essay on the French Revolution.",
-      submissionTime: "2024-12-25 6:00 PM",
-    },
-  ];
+  const { id } = useParams();
+  const { userId } = getLocalStorageItem("user");
+  const [selectedAssignment, setSelectedAssignment] = useState();
+  const [assignments, setAssignments] = useState([]);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [classRoomDetails, setClassRoom] = useState();
+  const [classRoomCreatedBy, setclassRoomCreatedBy] = useState();
+  const [submited, setSubmited] = useState();
 
-  const fileInputRef = useRef(null);
-  const onClickSubAssignmentBtn = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+  const handleAssignmentClick = (id) => {
+    const assignment = assignments.find((a) => a.id === id);
+    if (assignment) {
+      setSelectedAssignment(assignment);
     }
   };
+
+  const handleSubmit = () => {
+    setSelectedAssignment(null);
+  };
+
+  const handleCreateAssignment = (newAssignment) => {
+    const assignment = {
+      ...newAssignment,
+      id: (assignments.length + 1).toString(),
+      status: "pending",
+    };
+    setAssignments([...assignments, assignment]);
+    setShowCreateForm(false);
+  };
+  useEffect(() => {
+    const fetchAllAssignments = async () => {
+      const response = await getAssignments(id);
+      const classDetails = await getOneClassRooms(id);
+      const isSubmited = await isAssignmentSubmitted(id);
+      setClassRoom(classDetails);
+      setAssignments(response);
+      setSubmited(isSubmited.submission);
+      console.log(isSubmited.submission);
+      setclassRoomCreatedBy(classDetails.createdBy._id);
+    };
+    fetchAllAssignments();
+  }, []);
+
   return (
     <div className="flex h-screen bg-gray-50 ">
       <Sidebar />
       <main className="flex-1 p-6 overflow-y-auto">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="p-4 space-y-6 max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="flex md:flex-row flex-col justify-between items-center">
-              <h1 className="text-2xl font-bold">Assignments</h1>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                Create New Assignment
-              </button>
+        <div className="min-h-screen bg-gray-100">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-800">Assignments</h1>
+              {classRoomCreatedBy == userId ? (
+                <button
+                  onClick={() => setShowCreateForm(true)}
+                  className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <PlusCircle className="w-5 h-5" />
+                  Create Assignment
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
 
-            {/* Assignment Cards */}
-            <div className="space-y-4">
-              {assignments.map((assignment) => (
-                <div
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {assignments?.map((assignment) => (
+                <AssignmentCard
                   key={assignment.id}
-                  className="bg-white shadow-md rounded-lg p-4 border border-gray-200"
-                >
-                  <h2 className="text-lg font-semibold">{assignment.title}</h2>
-                  <p className="text-gray-600">{assignment.description}</p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Submission Time: {assignment.submissionTime}
-                  </p>
-                  <div className="mt-4">
-                    <input type="file" ref={fileInputRef} className=" hidden" />
-                    <Button onClick={onClickSubAssignmentBtn}>
-                      Submit Assignment
-                    </Button>
-                  </div>
-                </div>
+                  assignment={assignment}
+                  onClick={handleAssignmentClick}
+                  isSubmited={submited.filter(
+                    (data) => data.id == assignment.id
+                  )}
+                />
               ))}
             </div>
+
+            {selectedAssignment && (
+              <AssignmentDetails
+                assignment={selectedAssignment}
+                onClose={() => setSelectedAssignment(null)}
+                onSubmit={handleSubmit}
+              />
+            )}
+
+            {showCreateForm && (
+              <CreateAssignmentForm
+                onSubmit={handleCreateAssignment}
+                onClose={() => setShowCreateForm(false)}
+              />
+            )}
           </div>
         </div>
       </main>
