@@ -8,6 +8,6 @@ const {
 const router = express.Router();
 
 router.put("/viewed", isAuthorizedUser, markNotificationsAsViewed);
-router.get("/",isAuthorizedUser, getAllNotifications);
+router.post("/", isAuthorizedUser, getAllNotifications);
 
 module.exports = router;

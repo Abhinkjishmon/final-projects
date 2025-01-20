@@ -65,7 +65,6 @@ const VisaDetailsPage = () => {
   function findVisaByType(visaType) {
     const visaDetails = visaHeadings.find((visa) => visa.visaType === visaType);
     setVisaDetails(visaDetails);
-    console.log(visaType);
   }
   useEffect(() => {
     findVisaByType(visatype);

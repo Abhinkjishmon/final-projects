@@ -1,9 +1,12 @@
 import React from "react";
 import { Mail, MapPin, Link as LinkIcon, Twitter, Github } from "lucide-react";
 import { useSelector } from "react-redux";
+import { getLocalStorageItem } from "@/utils/localStorage";
 
 function ProfileHeader({ profileInfo }) {
-  const user = useSelector((state) => state.user.user);
+  // const user = useSelector((state) => state.user.user);
+    const { userId, email, profileImg } = getLocalStorageItem("user");
+
   return (
     <div className="relative">
       <div className="h-48 w-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
@@ -23,7 +26,7 @@ function ProfileHeader({ profileInfo }) {
               </h1>
               <p className="text-gray-500">{profileInfo?.email}</p>
             </div>
-            {user.userId == profileInfo?.userId && (
+            {userId == profileInfo?.userId && (
               <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                 <button className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                   <Mail className="h-5 w-5 mr-2" />

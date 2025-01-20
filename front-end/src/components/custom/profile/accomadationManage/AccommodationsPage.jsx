@@ -87,7 +87,6 @@ function AccommodationsPage() {
       const response = await getAccomodation();
       const whishlistResponce = await getWhishlistAccomodation();
       const getAppintment = await getAppointments();
-      console.log(getAppintment);
       setAppointments(getAppintment.appointments);
       setmyAccommodationsWhishlist(whishlistResponce.accommodations);
       setmyAccommodations(response.accommodations);
@@ -121,34 +120,56 @@ function AccommodationsPage() {
             </nav>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {activeTab === "accommodations" &&
-              myAccommodations?.map((accommodation) => (
-                <AccommodationCard
-                  key={accommodation._id}
-                  accommodation={accommodation}
-                  onDelete={() => setDeleted(true)}
-                  activeTab={activeTab}
-                />
-              ))}
+            {activeTab === "accommodations" && (
+              <>
+                {myAccommodations && myAccommodations.length > 0 ? (
+                  myAccommodations.map((accommodation) => (
+                    <AccommodationCard
+                      key={accommodation._id}
+                      accommodation={accommodation}
+                      onDelete={() => setDeleted(true)}
+                      activeTab={activeTab}
+                    />
+                  ))
+                ) : (
+                  <p>No accommodations available</p>
+                )}
+              </>
+            )}
 
-            {activeTab === "appointments" &&
-              myAppointments.map((appointment) => (
-                <AppointmentCard
-                  key={appointment.id}
-                  appointment={appointment}
-                />
-              ))}
+            {activeTab === "appointments" && (
+              <>
+                {myAppointments && myAppointments.length > 0 ? (
+                  myAppointments.map((appointment) => (
+                    <AppointmentCard
+                      key={appointment.id}
+                      appointment={appointment}
+                    />
+                  ))
+                ) : (
+                  <p>No appointments available</p>
+                )}
+              </>
+            )}
 
-            {activeTab === "wishlist" &&
-              myAccommodationsWhishlist?.map((accommodation) => (
-                <AccommodationCard
-                  key={accommodation.id}
-                  accommodation={accommodation}
-                  showStatus={false}
-                  activeTab={activeTab}
-                  onDelete={() => setDeleted(true)}
-                />
-              ))}
+            {activeTab === "wishlist" && (
+              <>
+                {myAccommodationsWhishlist &&
+                myAccommodationsWhishlist.length > 0 ? (
+                  myAccommodationsWhishlist.map((accommodation) => (
+                    <AccommodationCard
+                      key={accommodation.id}
+                      accommodation={accommodation}
+                      showStatus={false}
+                      activeTab={activeTab}
+                      onDelete={() => setDeleted(true)}
+                    />
+                  ))
+                ) : (
+                  <p>No accommodations in your wishlist</p>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -87,25 +87,29 @@ function BlogsPage() {
               <SkeletonCard /> // Show skeleton while loading
             ) : (
               <>
-                {blogs?.map((post, index) => (
-                  <BlogCard
-                    key={index}
-                    title={post.title}
-                    content={post.content}
-                    author={post.author}
-                    postDetails={post}
-                  />
-                ))}
+                {blogs && blogs.length > 0 ? (
+                  blogs.map((post, index) => (
+                    <BlogCard
+                      key={index}
+                      title={post.title}
+                      content={post.content}
+                      author={post.author}
+                      postDetails={post}
+                    />
+                  ))
+                ) : (
+                  <p>No blogs available</p>
+                )}
               </>
             )}
-            {activeTab === "liked-blogs" &&
+            {/* {activeTab === "liked-blogs" &&
               mockLikedBlogs.map((blog) => (
                 <BlogCard
                   key={blog.id}
                   blog={blog}
                   onLikeToggle={handleLikeToggle}
                 />
-              ))}
+              ))} */}
           </div>
         </div>
       </div>

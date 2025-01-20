@@ -26,6 +26,7 @@ const apiEndpoints = {
     getAccommodation: (accommodationId) =>
       `/accommodation/get-accommodations/${accommodationId}/details`,
     appointments: "/accommodation/appointments",
+    search: (query) => `/accommodation/search/?query=${query}`,
   },
   culturalIntergretion: {
     newBlogs: "/culturalfit/new-blogs",
@@ -87,6 +88,9 @@ const apiEndpoints = {
   },
   liveNews: {
     getLiveNews: `https://newsdata.io/api/1/latest?apikey=pub_50304e39cfbce9f3f75e11b4b7906c0d2e3c8&country=gb`,
+  },
+  notifications: {
+    getNotifications: "/notifications",
   },
 };
 

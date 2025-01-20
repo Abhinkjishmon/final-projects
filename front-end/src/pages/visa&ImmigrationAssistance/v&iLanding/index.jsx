@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Users, Send, CheckCircle } from "lucide-react";
-import { Globe2, CheckCircle2, Clock } from 'lucide-react';
+import { Globe2, CheckCircle2, Clock } from "lucide-react";
 import BusinessServices from "../businessServices";
 import VisaTypesSection from "../visaTypesSection";
 import { scrollToTop } from "@/utils/scroll";
@@ -9,6 +9,12 @@ const VisaSolutionsLanding = () => {
   useEffect(() => {
     scrollToTop();
   }, []);
+  const visaTypesSectionRef = useRef(null);
+  const scrollToVisaTypesSection = () => {
+    if (visaTypesSectionRef.current) {
+      visaTypesSectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <>
       <div className="min-h-[90vh]">
@@ -31,22 +37,10 @@ const VisaSolutionsLanding = () => {
                   Expert guidance through your visa and immigration process. We
                   make your dreams of living and working abroad a reality.
                 </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                  <div className="flex items-center space-x-3 text-white">
-                    <CheckCircle2 className="h-6 w-6 text-blue-300" />
-                    <span>99% Success Rate</span>
-                  </div>
-                  <div className="flex items-center space-x-3 text-white">
-                    <Globe2 className="h-6 w-6 text-blue-300" />
-                    <span>Global Coverage</span>
-                  </div>
-                  <div className="flex items-center space-x-3 text-white">
-                    <Clock className="h-6 w-6 text-blue-300" />
-                    <span>Fast Processing</span>
-                  </div>
-                </div>
-                <button className="bg-white text-blue-900 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-300 shadow-lg">
+                <button
+                  onClick={scrollToVisaTypesSection}
+                  className="bg-white text-blue-900 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-300 shadow-lg"
+                >
                   Get Free Consultation
                 </button>
               </div>
@@ -62,8 +56,10 @@ const VisaSolutionsLanding = () => {
                 </div>
                 <h3 className="text-xl font-semibold mb-4">Expert Guidance</h3>
                 <p className="text-gray-600">
-                  Posuere sed eu orci elementum nulla. Sed non blandit auctor
-                  consequat sit orci sem.
+                  Our team of immigration specialists is here to assist you
+                  every step of the way, providing expert advice and guidance on
+                  visa applications, residency options, and immigration laws to
+                  ensure a smooth and successful process.
                 </p>
               </div>
               <div className="bg-blue-900 text-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
@@ -74,8 +70,9 @@ const VisaSolutionsLanding = () => {
                   Tailored Solutions
                 </h3>
                 <p className="text-blue-100">
-                  Posuere sed eu orci elementum nulla. Sed non blandit auctor
-                  consequat sit orci sem.
+                  We offer personalized visa and immigration solutions tailored
+                  to your unique needs, ensuring a streamlined process that fits
+                  your goals and circumstances.
                 </p>
               </div>
 
@@ -87,8 +84,9 @@ const VisaSolutionsLanding = () => {
                   Streamlined Process
                 </h3>
                 <p className="text-gray-600">
-                  Posuere sed eu orci elementum nulla. Sed non blandit auctor
-                  consequat sit orci sem.
+                  P Our streamlined process simplifies visa applications and
+                  immigration procedures, ensuring fast and efficient handling
+                  of your case, with minimal hassle and delays.
                 </p>
               </div>
             </div>
@@ -96,7 +94,9 @@ const VisaSolutionsLanding = () => {
         </div>
       </div>
       <BusinessServices />
-      <VisaTypesSection />
+      <div ref={visaTypesSectionRef}>
+        <VisaTypesSection />
+      </div>
     </>
   );
 };

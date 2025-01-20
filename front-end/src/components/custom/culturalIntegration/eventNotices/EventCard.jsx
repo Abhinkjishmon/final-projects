@@ -110,9 +110,6 @@ function EventCard({ event }) {
                     <li>•{event?.addtionalInfo}</li>
                   </ul>
                 </div>
-                <button className="w-full bg-teal-500 text-white rounded-lg py-2 font-medium hover:bg-teal-600 transition-colors">
-                  Register for Event
-                </button>
               </div>
             )}
 

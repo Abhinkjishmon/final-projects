@@ -79,3 +79,17 @@ export const takeAppointments = async (formData) => {
     return { status: "FAILD", message };
   }
 };
+
+export const searchAccommodations = async (query) => {
+  try {
+    const { data } = await axiosInstance.post(
+      apiEndpoints.accommodation.search(query)
+    );
+    return data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+    return { status: "FAILD", message };
+  }
+};

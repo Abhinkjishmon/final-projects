@@ -165,7 +165,7 @@ export const ukVisas = [
     ],
   },
   {
-    visaType: "Tourist & Visiting Visa",
+    visaType: "Tourist",
     heading: "Tourist & Visiting Visa Portal",
     subHeading:
       "Explore the UK's rich culture and heritage. Your gateway to short-term visits for leisure, tourism, and family connections.",

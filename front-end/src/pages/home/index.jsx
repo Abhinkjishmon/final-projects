@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./style.css";
 
 import Hero from "@/components/custom/landingpage/Hero";
@@ -10,16 +10,23 @@ import FAQ from "@/components/custom/landingpage/FAQ";
 import HomeSlogen from "@/components/custom/landingpage/HomeSlogen";
 import LandingPage from "@/components/custom/landingpage/LandingPage";
 
-
-
 function Home() {
+  const servicesRef = useRef(null);
+
+  const scrollToServices = () => {
+    if (servicesRef.current) {
+      servicesRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <>
-      <LandingPage />
+      <LandingPage onLetsStartClick={scrollToServices} />
       <HomeSlogen />
       <Hero />
       <Whychoose />
-      <Services />
+      <div ref={servicesRef}>
+        <Services />
+      </div>
       <ArticalPreview />
     </>
   );

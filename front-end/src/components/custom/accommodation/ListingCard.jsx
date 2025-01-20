@@ -100,7 +100,9 @@ const ListingCard = ({ property, wishListAccommodationIds }) => {
           <div className="mt-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">
-                {property?.description}
+                {property?.description?.length > 200
+                  ? `${property.description.slice(0, 100)}...`
+                  : property.description}
               </span>
             </div>
             <div className="text-lg font-semibold">

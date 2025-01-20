@@ -8,12 +8,11 @@ import {
   FaPaintBrush,
   FaLightbulb,
 } from "react-icons/fa";
-function AcadamicLanding() {
+function AcadamicLanding({ onStartCourseClick }) {
   return (
     <>
       <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
         <div className="container mx-auto md:px-40 px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left Content */}
           <div className="space-y-6 z-10">
             <h1 className="text-4xl md:text-5xl font-bold">
               Hello Friends
@@ -28,13 +27,11 @@ function AcadamicLanding() {
             <p className="text-lg md:text-xl text-gray-600">
               Do You Like It Too 😊?
             </p>
-            <button className="bg-black text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-gray-800 transition-colors">
+            <button  onClick={onStartCourseClick} className="bg-black text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-gray-800 transition-colors">
               Start Course Now
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>
-
-          {/* Right Image with Background Circle */}
           <div className="relative flex justify-end items-center bg-[#E671E5] rounded-full">
             <div className="absolute w-96 h-96 bg-blue-100 rounded-full blur-lg -z-10"></div>
             <img
@@ -44,8 +41,6 @@ function AcadamicLanding() {
             />
           </div>
         </div>
-
-        {/* Floating Icons and Text around Image */}
         <div className="absolute top-5 left-10 text-blue-500 text-3xl animate-bounce">
           <FaLaptop />
         </div>
@@ -66,9 +61,6 @@ function AcadamicLanding() {
         </div>
         <div className="absolute bottom-28 right-1/4 text-cyan-400 text-base bg-cyan-100 px-3 py-2 rounded-lg shadow-lg animate-pulse">
           "Join Us Now!"
-        </div>
-        <div className="absolute top-40 left-1/5 text-pink-500 text-5xl">
-          <FaPaintBrush />
         </div>
         <div className="absolute top-10 right-5 text-teal-600 text-lg bg-teal-100 px-4 py-2 rounded-full shadow-sm animate-bounce">
           "Start Creating!"

@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
 import NotificationItem from "./NotificationItem";
+import { getNotifications } from "@/apiService.js/notification.service";
+import { getLocalStorageItem } from "@/utils/localStorage";
 
 function NotificationsPage() {
   const mockNotifications = [
@@ -27,7 +29,20 @@ function NotificationsPage() {
       isRead: false,
     },
   ];
+  const [notification, setNotification] = useState([]);
+  const [unreadMessage, setUnreadMessage] = useState();
   const unreadCount = mockNotifications.filter((n) => !n.isRead).length;
+  useEffect(() => {
+    const fetchNotification = async () => {
+      const response = await getNotifications();
+      setNotification(response.notifications);
+      const unreadCount = response.notifications.filter(
+        (notification) => !notification.read
+      ).length;
+      setUnreadMessage(unreadCount);
+    };
+    fetchNotification();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -42,7 +57,7 @@ function NotificationsPage() {
             </div>
             {unreadCount > 0 && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                {unreadCount} unread
+                {unreadMessage} unread
               </span>
             )}
           </div>
@@ -51,12 +66,16 @@ function NotificationsPage() {
 
       <main className="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="space-y-4">
-          {mockNotifications.map((notification) => (
-            <NotificationItem
-              key={notification.id}
-              notification={notification}
-            />
-          ))}
+          {notification && notification.length > 0 ? (
+            notification.map((notificationItem) => (
+              <NotificationItem
+                key={notificationItem.id}
+                notification={notificationItem}
+              />
+            ))
+          ) : (
+            <p>No notifications</p>
+          )}
         </div>
       </main>
     </div>

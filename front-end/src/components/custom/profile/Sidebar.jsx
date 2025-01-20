@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { getLocalStorageItem } from "@/utils/localStorage";
 
 const Sidebar = () => {
   const { profileInfo } = useSelector((state) => state.userProfile);
@@ -31,8 +32,9 @@ const Sidebar = () => {
     { icon: Bell, text: "Notifications", href: "/notifications" },
   ];
   const user = useSelector((state) => state.user.user);
+  const { userId } = getLocalStorageItem("user");
   const isUserOwnedProfile = () => {
-    if (profileInfo?._id === user.userId) {
+    if (profileInfo?._id === userId) {
       return [
         ...menuItems,
         {
@@ -46,7 +48,7 @@ const Sidebar = () => {
   };
   const handleLogout = () => {
     localStorage.clear();
-   
+
     navigate("/signin");
     window.location.reload();
   };
@@ -103,7 +105,6 @@ const Sidebar = () => {
                         >
                           Logout
                         </button>
-
                       </div>
                     </div>
                   </div>

@@ -469,6 +469,44 @@ const getAppointmentsForUserAccommodations = async (req, res) => {
   }
 };
 
+const searchAccommodations = async (req, res) => {
+  try {
+    const { query } = req.query; 
+    if (!query || query.trim() === "") {
+      return res.status(400).json({
+        message: "Search query is required.",
+      });
+    }
+    const searchRegex = new RegExp(query, "i");
+
+    const accommodations = await Accommodation.find({
+      $or: [
+        { "address.street": searchRegex },
+        { "address.city": searchRegex },
+        { "address.state": searchRegex },
+        { "address.zipCode": searchRegex },
+        { "address.country": searchRegex },
+        { title: searchRegex },
+      ],
+    });
+
+    if (accommodations.length === 0) {
+      return res.status(404).json({
+        message: "No accommodations found matching the given search query.",
+      });
+    }
+
+    res.status(200).json(accommodations);
+  } catch (error) {
+    console.error("Error searching accommodations:", error);
+    res.status(500).json({
+      message: "An error occurred while searching for accommodations.",
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   createAccommodation,
   updateAccommodation,
@@ -483,4 +521,5 @@ module.exports = {
   getAccommodationsByUser,
   getWishlistedAccommodations,
   getAppointmentsForUserAccommodations,
+  searchAccommodations
 };

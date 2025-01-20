@@ -13,6 +13,7 @@ const {
   getAccommodationsByUser,
   getWishlistedAccommodations,
   getAppointmentsForUserAccommodations,
+  searchAccommodations,
 } = require("../controllers/findAccomadtionsController");
 const { isAuthorizedUser } = require("../middleware/verifyjwt");
 const multer = require("multer");
@@ -77,5 +78,6 @@ router.post(
   getAccommodationsByUser
 );
 router.post("/get-whishlist", isAuthorizedUser, getWishlistedAccommodations);
+router.post("/search", isAuthorizedUser, searchAccommodations);
 
 module.exports = router;

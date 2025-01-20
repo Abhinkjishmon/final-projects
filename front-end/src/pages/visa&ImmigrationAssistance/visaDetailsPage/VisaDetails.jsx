@@ -41,7 +41,7 @@ function VisaDetails() {
   const currentUrl = location.pathname + location.search;
   const queryParams = new URLSearchParams(location.search);
   const visatype = queryParams.get("visatype");
-
+  console.log(visatype);
   useEffect(() => {
     scrollToTop();
     const foundVisaDetails = ukVisas.find((visa) => visa.visaType === visatype);

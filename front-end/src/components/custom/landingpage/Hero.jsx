@@ -35,8 +35,6 @@ function Hero() {
                 </div>
               </div>
             </div>
-
-            {/* Stats Card */}
             <div className="absolute top-12 left-0 bg-white rounded-lg shadow-lg p-4 flex items-center gap-3">
               <div className="bg-pink-100 p-2 rounded-full">
                 <Award className="w-6 h-6 text-red-500" />
@@ -48,8 +46,6 @@ function Hero() {
             </div>
           </div>
         </div>
-
-        {/* Right Section with Content */}
         <div className="space-y-6">
           <h1 className="text-4xl font-bold text-gray-900 leading-tight">
             We Bring Strategy to Your Success
@@ -70,10 +66,6 @@ function Hero() {
             marketing partner that "gets it," has strong technology chops and a
             few brilliant ideas up their sleeves, scroll on.
           </p>
-
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
-            Check out our services
-          </Button>
         </div>
       </div>
     </div>

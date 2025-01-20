@@ -9,33 +9,6 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { formatDate } from "@/utils/date";
 
-// const initialSessions = [
-//   {
-//     id: "1",
-//     title: "Introduction to React Hooks",
-//     description:
-//       "Learn the fundamentals of React Hooks and how to use them effectively in your applications.",
-//     thumbnail:
-//       "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
-//     videoURL: "https://www.youtube.com/embed/odiU_uT8TXc?si=hdc1V7MgHHQ9a_YB",
-//     instructor: "Sarah Johnson",
-//     date: "March 15, 2024",
-//     viewers: 245,
-//   },
-//   {
-//     id: "2",
-//     title: "Advanced TypeScript Patterns",
-//     description:
-//       "Deep dive into advanced TypeScript patterns and best practices for large-scale applications.",
-//     thumbnail:
-//       "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
-//     videoURL: "https://www.youtube.com/embed/odiU_uT8TXc?si=hdc1V7MgHHQ9a_YB",
-//     instructor: "Mike Chen",
-//     date: "March 16, 2024",
-//     viewers: 189,
-//   },
-// ];
-
 function LiveClass() {
   const { id } = useParams();
   const [liveSessions, setLiveSessions] = useState([]);
@@ -129,7 +102,7 @@ function LiveClass() {
           </header>
           <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {liveSessions.map((session) => (
+              {liveSessions?.map((session) => (
                 <div
                   key={session.id}
                   className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]"

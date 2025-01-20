@@ -22,11 +22,9 @@ const FloatingElement = ({ Icon, color, size, position, animation }) => (
   </div>
 );
 
-function LandingPage() {
+function LandingPage({ onLetsStartClick }) {
   const user = useSelector((state) => state.user.user);
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div className=" home bg-gradient-to-br from-white to-blue-50 overflow-hidden">
@@ -77,7 +75,10 @@ function LandingPage() {
               most of your experience.
             </p>
 
-            <button className="group w-full sm:w-auto bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <button
+              onClick={onLetsStartClick}
+              className="group w-full sm:w-auto bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
               <span className="flex items-center justify-center gap-2">
                 Lets start
                 <LucideArrowRight className="w-5 h-5 transition-colors" />

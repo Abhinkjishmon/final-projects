@@ -4,30 +4,19 @@ export function TeachersHero() {
   return (
     <div className="space-y-6">
       <div className="text-sm uppercase tracking-wider text-muted-foreground">
-        TEACHERS
+        STUDENTS & EDUCATORS
       </div>
       <div>
         <blockquote className="text-4xl md:text-5xl font-serif leading-tight">
-          "I'm finally able to truly differentiate my classroom. This has been
-          priceless for my students' engagement."
+          "With this platform, I can access resources tailored to my needs,
+          making learning more engaging and effective."
         </blockquote>
-        <div className="mt-6 space-y-2">
-          <div className="text-lg font-medium">UDAYA LAKSHMI PALAPALA</div>
-          <div className="text-muted-foreground">
-            Middle school Coordinator / Hyderabad, Telangana
-          </div>
-        </div>
       </div>
       <p className="text-lg text-muted-foreground max-w-lg">
-        We empower teachers to support their entire classroom. 90% of US
-        teachers who have used Khan Academy have found us effective.
+        We provide personalized academic assistance to empower students and
+        educators. From interactive resources to expert guidance, our platform
+        is designed to enhance learning outcomes for everyone.
       </p>
-      <Button
-        size="lg"
-        className="bg-[#1A73E8] hover:bg-[#1557B0] text-white px-8"
-      >
-        Teachers, start here
-      </Button>
     </div>
   );
 }

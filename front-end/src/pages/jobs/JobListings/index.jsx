@@ -26,7 +26,7 @@ const JobListings = () => {
     companyType: false,
     roleCategory: false,
   });
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchName, setSearchQuery] = useState("");
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category") || "All";
   const toggleSection = (section) => {
@@ -37,29 +37,53 @@ const JobListings = () => {
   };
 
   const filters = {
-    salary: [
-      { label: "3-6 Lakhs", count: 67969 },
-      { label: "6-10 Lakhs", count: 90932 },
-      { label: "10-15 Lakhs", count: 52374 },
-      { label: "15-25 Lakhs", count: 14768 },
-    ],
     companyType: [
-      { label: "Foreign MNC", count: 44836 },
-      { label: "Corporate", count: 14962 },
-      { label: "Indian MNC", count: 3908 },
-      { label: "Startup", count: 2196 },
+      { label: "Internship" },
+      { label: "Contract" },
+      { label: "Part-time" },
+      { label: "Full-time" },
     ],
     roleCategory: [
-      { label: "Software Development", count: 77071 },
-      { label: "DBA / Data warehouse", count: 8361 },
-      { label: "Quality Assurance", count: 7500 },
-      { label: "Other Design", count: 4349 },
+      { label: "Software Development" },
+      { label: "DBA / Data warehouse" },
+      { label: "Quality Assurance" },
+      { label: "Other Design" },
+    ],
+    category: [
+      { label: "Human Resource" },
+      { label: "Business" },
+      { label: "Engineering" },
+      { label: "Technology" },
+      { label: "Finance" },
+      { label: "Marketing" },
+      { label: "Sales" },
+      { label: "Designg" },
     ],
   };
 
   const fetchAllJobs = async () => {
     const response = await getAllJobs(category);
     setjobListings(response.jobs);
+  };
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim() === "") {
+      setFilteredJobs(originalJobs);
+      return;
+    }
+
+    const filtered = originalJobs.filter((job) => {
+      const searchTerm = query.toLowerCase();
+      return (
+        job.title.toLowerCase().includes(searchTerm) ||
+        job.company.toLowerCase().includes(searchTerm)
+      );
+    });
+
+    setFilteredJobs(filtered);
   };
   useEffect(() => {
     scrollToTop();
@@ -73,21 +97,20 @@ const JobListings = () => {
           <Input
             type="text"
             placeholder="Search jobs by title, company, or keywords..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchName}
+            onChange={handleSearch}
             className="pl-10 pr-4 py-2 w-full"
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
         </div>
-        {searchQuery && (
+        {searchName && (
           <div className="mt-2 text-sm text-gray-600">
-            Showing results for "{searchQuery}"
+            Showing results for "{searchName}"
           </div>
         )}
       </div>
     </div>
   );
-
   const FilterSection = ({ title, items, isExpanded, onToggle }) => (
     <div className="border-b p-4">
       <div
@@ -103,7 +126,7 @@ const JobListings = () => {
             <div key={index} className="flex items-center space-x-2">
               <Checkbox id={`${title}-${index}`} />
               <label htmlFor={`${title}-${index}`} className="text-sm">
-                {item.label} ({item.count})
+                {item.label}
               </label>
             </div>
           ))}
@@ -176,14 +199,7 @@ const JobListings = () => {
       <div className="max-w-7xl mx-auto px-4">
         <SearchBar />
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Filters Section */}
           <div className="md:w-1/4 bg-white h-[100%] rounded-lg shadow">
-            <FilterSection
-              title="Salary"
-              items={filters.salary}
-              isExpanded={expandedSections.salary}
-              onToggle={() => toggleSection("salary")}
-            />
             <FilterSection
               title="Job Type"
               items={filters.companyType}
@@ -198,7 +214,7 @@ const JobListings = () => {
             />
             <FilterSection
               title="Category"
-              items={filters.roleCategory}
+              items={filters.category}
               isExpanded={expandedSections.roleCategory}
               onToggle={() => toggleSection("roleCategory")}
             />
@@ -224,7 +240,7 @@ const JobListings = () => {
                 </div>
               )}
             </>
-        )}
+          )}
         </div>
       </div>
     </div>

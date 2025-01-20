@@ -42,43 +42,34 @@ const markNotificationsAsViewed = async (req, res) => {
   const { userId } = req.body;
 
   try {
-    // Ensure userId is provided
     if (!userId) {
       return res.status(400).json({ error: "User ID is required." });
     }
 
-    // Update all notifications for the user to mark them as viewed
     const updatedNotifications = await Notification.updateMany(
-      { receiverId: userId, viewed: false }, // Filter: Unviewed notifications for the user
-      { $set: { viewed: true } } // Update: Mark as viewed
+      { receiverId: userId, viewed: false },
+      { $set: { viewed: true } }
     );
-
-    // Respond with success
     res.status(200).json({
       message: "Notifications marked as viewed successfully.",
-      updatedCount: updatedNotifications.nModified, // Number of notifications updated
+      updatedCount: updatedNotifications.nModified,
     });
   } catch (error) {
     console.error("Error marking notifications as viewed:", error.message);
     res.status(500).json({ error: "Internal Server Error." });
   }
 };
-
-// Get all notifications with accommodation details for a specific user
 const getAllNotifications = async (req, res) => {
   const { userId } = req.body;
   try {
-    // Ensure userId is provided
+
     if (!userId) {
       return res.status(400).json({ error: "User ID is required." });
     }
-
-    // Fetch notifications for the user and populate accommodation details
     const notifications = await Notification.find({ receiverId: userId }).sort({
       date: -1,
-    }); // Sort notifications by date (newest first)
+    }); 
 
-    // Respond with the notifications
     res.status(200).json({
       message: "Notifications retrieved successfully.",
       notifications,

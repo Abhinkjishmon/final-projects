@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Heart, MapPin, Plus, Flame } from "lucide-react";
 import {
   Card,
@@ -7,85 +7,39 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import homeCard from "/images/homeCard.jpg";
 import { Link } from "react-router-dom";
+import { getAllAccommodation } from "@/apiService.js/accommodation";
 
-const PropertyCard = ({ property }) => {
-  const [isCompared, setIsCompared] = useState(false);
-
+export const PropertyCard = ({ property }) => {
   return (
-    <Card className="overflow-hidden group">
-      <div className="relative">
-        <img
-          src={property.image}
-          alt={property.name}
-          className="w-full h-64 object-cover"
-        />
-        <div className="absolute top-3 left-3">
-          <Badge className="bg-blue-600 text-white flex items-center gap-1">
-            <Flame className="w-4 h-4" />
-            OFFER UPTO £{property.offer}
-          </Badge>
+    <Link to={`/find-accommodations/view-Property/${property._id}`}>
+      <Card className="overflow-hidden group">
+        <div className="relative">
+          <img
+            src={property.images[0]}
+            alt={property.title}
+            className="w-full h-64 object-cover"
+          />
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-3 right-3 bg-white/80 hover:bg-white"
-          onClick={() => {}}
-        >
-          <Heart className="w-5 h-5" />
-        </Button>
-        <Button
-          variant="secondary"
-          size="sm"
-          className={`absolute bottom-3 right-3 ${
-            isCompared ? "bg-green-500 text-white" : "bg-white/90"
-          }`}
-          onClick={() => setIsCompared(!isCompared)}
-        >
-          <Plus className="w-4 h-4 mr-1" />
-          {isCompared ? "Added to Compare" : "Add to Compare"}
-        </Button>
-      </div>
 
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
-          <h3 className="text-lg font-semibold">{property.name}</h3>
-          <div className="flex items-center text-gray-500">
-            <MapPin className="w-4 h-4 mr-1" />
-            <span className="text-sm">{property.distance} miles</span>
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-start">
+            <h3 className="text-lg font-semibold">{property.title}</h3>
+            <div className="flex items-center text-gray-500">
+              <span className="text-sm">{property.furnishing} miles</span>
+            </div>
           </div>
-        </div>
-        <p className="text-sm text-gray-500">{property.address}</p>
-      </CardHeader>
-
-      <CardContent className="pb-2">
-        <div className="flex flex-wrap gap-2">
-          {property.tags.map((tag, index) => (
-            <Badge key={index} variant="secondary" className="bg-gray-100">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </CardContent>
-
-      <CardFooter className="flex justify-between items-center pt-2">
-        <div>
-          <p className="text-sm text-gray-500">Starting From</p>
-          <p className="text-xl font-bold text-red-500">
-            £{property.price}/week
-          </p>
-        </div>
-        <div className="flex gap-2">
-          {property.features.map((feature, index) => (
-            <Badge key={index} variant="outline" className="text-xs">
-              {feature}
-            </Badge>
-          ))}
-        </div>
-      </CardFooter>
-    </Card>
+          <p className="text-sm text-gray-500">{property?.address?.city}</p>
+        </CardHeader>
+        <CardFooter className="flex justify-between items-center pt-2">
+          <div>
+            <p className="text-sm text-gray-500">Starting From</p>
+            <p className="text-xl font-bold text-red-500">£{property.rent}</p>
+          </div>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 };
 
@@ -121,7 +75,47 @@ const PropertyListings = () => {
       features: ["No Visa No Pay", "No University No Pay"],
       image: homeCard,
     },
+    {
+      name: "Chapter Portobello",
+      address: "1 Alderson St, London W10 5JY, United Kingdom",
+      distance: "6.25",
+      price: "264",
+      offer: "250",
+      tags: ["Studio", "Apartments"],
+      features: ["No Visa No Pay", "No University No Pay"],
+      image: homeCard,
+    },
+    {
+      name: "Chapter Portobello",
+      address: "1 Alderson St, London W10 5JY, United Kingdom",
+      distance: "6.25",
+      price: "264",
+      offer: "250",
+      tags: ["Studio", "Apartments"],
+      features: ["No Visa No Pay", "No University No Pay"],
+      image: homeCard,
+    },
+    {
+      name: "Chapter Portobello",
+      address: "1 Alderson St, London W10 5JY, United Kingdom",
+      distance: "6.25",
+      price: "264",
+      offer: "250",
+      tags: ["Studio", "Apartments"],
+      features: ["No Visa No Pay", "No University No Pay"],
+      image: homeCard,
+    },
   ];
+  const [accommodations, setaccommodations] = useState();
+
+  useEffect(() => {
+    const getFeaturedAccomadation = async () => {
+      const response = await getAllAccommodation();
+      console.log(response);
+      setaccommodations(response?.accommodations.slice(0, 6).reverse());
+    };
+    getFeaturedAccomadation();
+  }, []);
 
   return (
     <div className="w-full  lg:px-32 px-4 py-12 bg-blue-200">
@@ -130,13 +124,13 @@ const PropertyListings = () => {
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {properties.map((property, index) => (
+        {accommodations?.map((property, index) => (
           <PropertyCard key={index} property={property} />
         ))}
       </div>
 
       <div className="text-center mt-12">
-        <Link to={'all-Property'}>
+        <Link to={"all-Property"}>
           <Button className="bg-blue-500 hover:bg-blue-600 text-white">
             View all properties
           </Button>
