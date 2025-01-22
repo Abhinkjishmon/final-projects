@@ -85,6 +85,8 @@ const apiEndpoints = {
     getCreatedClassRoom: "acadamic/user/classrooms",
     getJoinedClassroom: "/acadamic/user/participant-classrooms",
     deleteClassroom: (classroomId) => `/acadamic/classrooms/${classroomId}`,
+    getSavedJobs: "/jobs/get-saved",
+    removeSavedJob: (jobId) => `/jobs/remove-saved/${jobId}`,
   },
   liveNews: {
     getLiveNews: `https://newsdata.io/api/1/latest?apikey=pub_50304e39cfbce9f3f75e11b4b7906c0d2e3c8&country=gb`,

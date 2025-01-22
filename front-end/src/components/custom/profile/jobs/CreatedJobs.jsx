@@ -44,14 +44,18 @@ function CreatedJobs() {
           </button>
         </Link>
       </div>
-      {applications?.map((job) => (
-        <JobCardProps
-          key={job.id}
-          job={job}
-          type="created"
-          onAction={handleJobAction}
-        />
-      ))}
+      {applications && applications.length > 0 ? (
+        applications.map((job) => (
+          <JobCardProps
+            key={job.id}
+            job={job}
+            type="created"
+            onAction={handleJobAction}
+          />
+        ))
+      ) : (
+        <p>No created jobs available</p>
+      )}
     </div>
   );
 }

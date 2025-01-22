@@ -99,3 +99,17 @@ export const searchForJob = async (title, location) => {
     return { status: "FAILD", message };
   }
 };
+
+export const removeSavedJob = async (id) => {
+  try {
+    const { data } = await axiosInstance.post(
+      apiEndpoints.profile.removeSavedJob(id)
+    );
+    return data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+    return { status: "FAILD", message };
+  }
+};

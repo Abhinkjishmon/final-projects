@@ -194,3 +194,17 @@ export const deleteClassrooms = async (id) => {
     return { status: "FAILD", message };
   }
 };
+
+export const getSavedJobsByUser = async () => {
+  try {
+    const { data } = await axiosInstance.post(
+      apiEndpoints.profile.getSavedJobs
+    );
+    return data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+    return { status: "FAILD", message };
+  }
+};

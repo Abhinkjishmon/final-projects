@@ -7,67 +7,9 @@ import {
   getAppointments,
   getWhishlistAccomodation,
 } from "@/apiService.js/profile.service";
+import { SkeletonCard } from "../..";
 
 function AccommodationsPage() {
-  const mockMyAccommodations = [
-    {
-      id: "1",
-      title: "Modern Downtown Apartment",
-      location: "New York, NY",
-      price: 150,
-      imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
-      rating: 4.5,
-      type: "apartment",
-      status: "available",
-    },
-    {
-      id: "2",
-      title: "Cozy Beach House",
-      location: "Miami, FL",
-      price: 200,
-      imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6",
-      rating: 4.8,
-      type: "house",
-      status: "booked",
-    },
-  ];
-
-  const mockAppointments = [
-    {
-      id: "1",
-      accommodationId: "1",
-      date: "2024-03-20",
-      time: "14:00",
-      status: "confirmed",
-      guestName: "John Smith",
-      guestEmail: "john@example.com",
-      guestPhone: "+1 234-567-8900",
-    },
-    {
-      id: "2",
-      accommodationId: "2",
-      date: "2024-03-22",
-      time: "10:00",
-      status: "pending",
-      guestName: "Sarah Johnson",
-      guestEmail: "sarah@example.com",
-      guestPhone: "+1 234-567-8901",
-    },
-  ];
-
-  const mockWishlist = [
-    {
-      id: "3",
-      title: "Luxury Penthouse",
-      location: "Los Angeles, CA",
-      price: 300,
-      imageUrl: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",
-      rating: 4.9,
-      type: "apartment",
-      status: "available",
-      dateAdded: "2024-03-15",
-    },
-  ];
   const [myAccommodations, setmyAccommodations] = useState([]);
   const [myAppointments, setAppointments] = useState([]);
   const [myAccommodationsWhishlist, setmyAccommodationsWhishlist] = useState(
@@ -75,6 +17,7 @@ function AccommodationsPage() {
   );
   const [activeTab, setActiveTab] = React.useState("accommodations");
   const [isDeleted, setDeleted] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const tabs = [
     { id: "accommodations", label: "My Accommodations", icon: Home },
@@ -84,13 +27,22 @@ function AccommodationsPage() {
 
   useEffect(() => {
     const fetchUserAccomodation = async () => {
-      const response = await getAccomodation();
-      const whishlistResponce = await getWhishlistAccomodation();
-      const getAppintment = await getAppointments();
-      setAppointments(getAppintment.appointments);
-      setmyAccommodationsWhishlist(whishlistResponce.accommodations);
-      setmyAccommodations(response.accommodations);
+      setLoader(true); // Start the loader before fetching data
+      try {
+        const response = await getAccomodation();
+        const whishlistResponce = await getWhishlistAccomodation();
+        const getAppintment = await getAppointments();
+
+        setAppointments(getAppintment.appointments);
+        setmyAccommodationsWhishlist(whishlistResponce.accommodations);
+        setmyAccommodations(response.accommodations);
+      } catch (error) {
+        console.error("Error fetching data:", error); 
+      } finally {
+        setLoader(false); 
+      }
     };
+
     fetchUserAccomodation();
   }, [isDeleted]);
 
@@ -120,53 +72,59 @@ function AccommodationsPage() {
             </nav>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {activeTab === "accommodations" && (
+            {loader ? (
+              <SkeletonCard />
+            ) : (
               <>
-                {myAccommodations && myAccommodations.length > 0 ? (
-                  myAccommodations.map((accommodation) => (
-                    <AccommodationCard
-                      key={accommodation._id}
-                      accommodation={accommodation}
-                      onDelete={() => setDeleted(true)}
-                      activeTab={activeTab}
-                    />
-                  ))
-                ) : (
-                  <p>No accommodations available</p>
+                {activeTab === "accommodations" && (
+                  <>
+                    {myAccommodations && myAccommodations.length > 0 ? (
+                      myAccommodations.map((accommodation) => (
+                        <AccommodationCard
+                          key={accommodation._id}
+                          accommodation={accommodation}
+                          onDelete={() => setDeleted(true)}
+                          activeTab={activeTab}
+                        />
+                      ))
+                    ) : (
+                      <p>No accommodations available</p>
+                    )}
+                  </>
                 )}
-              </>
-            )}
 
-            {activeTab === "appointments" && (
-              <>
-                {myAppointments && myAppointments.length > 0 ? (
-                  myAppointments.map((appointment) => (
-                    <AppointmentCard
-                      key={appointment.id}
-                      appointment={appointment}
-                    />
-                  ))
-                ) : (
-                  <p>No appointments available</p>
+                {activeTab === "appointments" && (
+                  <>
+                    {myAppointments && myAppointments.length > 0 ? (
+                      myAppointments.map((appointment) => (
+                        <AppointmentCard
+                          key={appointment.id}
+                          appointment={appointment}
+                        />
+                      ))
+                    ) : (
+                      <p>No appointments available</p>
+                    )}
+                  </>
                 )}
-              </>
-            )}
 
-            {activeTab === "wishlist" && (
-              <>
-                {myAccommodationsWhishlist &&
-                myAccommodationsWhishlist.length > 0 ? (
-                  myAccommodationsWhishlist.map((accommodation) => (
-                    <AccommodationCard
-                      key={accommodation.id}
-                      accommodation={accommodation}
-                      showStatus={false}
-                      activeTab={activeTab}
-                      onDelete={() => setDeleted(true)}
-                    />
-                  ))
-                ) : (
-                  <p>No accommodations in your wishlist</p>
+                {activeTab === "wishlist" && (
+                  <>
+                    {myAccommodationsWhishlist &&
+                    myAccommodationsWhishlist.length > 0 ? (
+                      myAccommodationsWhishlist.map((accommodation) => (
+                        <AccommodationCard
+                          key={accommodation.id}
+                          accommodation={accommodation}
+                          showStatus={false}
+                          activeTab={activeTab}
+                          onDelete={() => setDeleted(true)}
+                        />
+                      ))
+                    ) : (
+                      <p>No accommodations in your wishlist</p>
+                    )}
+                  </>
                 )}
               </>
             )}

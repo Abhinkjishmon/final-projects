@@ -258,6 +258,33 @@ const getSavedJobs = async (req, res) => {
       .json({ message: "Failed to fetch saved jobs", error: error.message });
   }
 };
+const removeSavedJob = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const { jobId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }       
+    const result = await SavedJob.findOneAndDelete({ userId, jobId });
+
+    if (!result) {
+      return res.status(404).json({ message: "Saved job not found" });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: "Job removed from saved list successfully",
+        status: "SUCCESS",
+      });
+  } catch (error) {
+    console.error("Error removing saved job:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to remove saved job", error: error.message });
+  }
+};
 
 /**
  * Get all jobs
@@ -464,5 +491,6 @@ module.exports = {
   getJobWithSimilarJobs,
   getFeaturedJobs,
   getUserApplications,
-  searchJobs
+  searchJobs,
+  removeSavedJob,
 };

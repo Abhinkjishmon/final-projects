@@ -3,12 +3,24 @@ import { Calendar, MapPin, Building2, Trash2 } from "lucide-react";
 import { formatDate, getRelativeTime } from "@/utils/date";
 import { getStatusColor } from "@/utils/jobs";
 import { Link, useParams } from "react-router-dom";
+import { removeSavedJob } from "@/apiService.js/job.service";
+import { toast } from "react-toastify";
 
 function JobCardProps({ job, type, onAction }) {
   const jobDetails = type === "created" ? job : job?.jobId;
   const { id } = useParams();
 
   if (!jobDetails) return null;
+  const handleRemoveJob = async (e) => {
+    e.preventDefault();
+    onAction?.("remove", job._id);
+    const response = await removeSavedJob(job?._id);
+    if (response.status !== "SUCCESS") {
+      toast.error(response.message);
+    } else {
+      toast.success(response.message);
+    }
+  };
 
   return (
     <Link to={`/find-job/about-job/${jobDetails?._id}`}>
@@ -59,7 +71,7 @@ function JobCardProps({ job, type, onAction }) {
             </button>
             <Link to={`/profile/${id}/jobs/applications/${jobDetails._id}`}>
               <button
-                onClick={() => onAction?.("applications", job._id)}
+                onClick={() => onAction("applications", job._id)}
                 className="inline-flex items-center px-3 py-1.5 border border-blue-500 text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600"
               >
                 View Applications
@@ -81,7 +93,7 @@ function JobCardProps({ job, type, onAction }) {
         {type === "wishlist" && (
           <div className="mt-4 flex justify-end">
             <button
-              onClick={() => onAction?.("remove", job._id)}
+              onClick={handleRemoveJob}
               className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
             >
               <Trash2 className="h-4 w-4 mr-2" />

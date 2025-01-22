@@ -18,6 +18,7 @@ const {
   getFeaturedJobs,
   getUserApplications,
   searchJobs,
+  removeSavedJob,
 } = require("../controllers/jobController");
 
 const router = express.Router();
@@ -35,7 +36,8 @@ router.post(
 router.post("/save/:jobId", isAuthorizedUser, saveJob);
 
 // Route to get all saved jobs for a user
-router.get("/get-saved", isAuthorizedUser, getSavedJobs);
+router.post("/get-saved", isAuthorizedUser, getSavedJobs);
+router.post("/remove-saved/:jobId", isAuthorizedUser, removeSavedJob);
 
 // Route to update a job
 router.put("/:jobId", isAuthorizedUser, updateJob);
@@ -65,6 +67,6 @@ router.get("/applications/:jobId", isAuthorizedUser, getApplicationsForJob);
 
 //routes to get job applied by user
 router.post("/applied", isAuthorizedUser, getUserApplications);
-router.post("/search",isAuthorizedUser, searchJobs);
+router.post("/search", isAuthorizedUser, searchJobs);
 
 module.exports = router;
