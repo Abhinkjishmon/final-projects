@@ -369,7 +369,7 @@ const createSession = async (req, res) => {
     const { title, description, videoId, instructor, date } = req.body;
     const { classroomId } = req.params;
     const file = req.file;
-    if (!title || !description || !videoId || !instructor || !date) {
+    if (!title || !description || !videoId || !instructor || !date) { 
       return res.status(400).json({
         message: "All fields are required",
         status: "FAILED",
@@ -390,7 +390,7 @@ const createSession = async (req, res) => {
       });
     }
 
-    const cloudUpload = await uploadFiletoCloudinary(posterBase64);
+    const cloudUpload = await   (posterBase64);
     if (!cloudUpload || !cloudUpload.url) {
       return res.status(500).json({
         message: "Failed to upload image to Cloudinary. Try again later.",

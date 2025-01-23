@@ -5,6 +5,7 @@ const { accessSecritKey, refreshSecritKey } = require("../config/contents");
 const { SUCCESS } = require("../utils/statusCode");
 const ResponseHandler = require("../utils/appSuccess");
 const { uploadFiletoCloudinary } = require("../utils/cloudinayFileUpload");
+const convertToBase64 = require("../helper/fileToBase64");
 
 const userController = {
   /**
@@ -47,13 +48,10 @@ const userController = {
   login: async (req, res, next) => {
     try {
       const { email, password } = req.body;
-      // Check if the user exists
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(404).json({ message: "User not found." });
       }
-
-      // Compare passwords
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid email or password." });
@@ -83,6 +81,7 @@ const userController = {
       next(error);
     }
   },
+
   updateUser: async (req, res) => {
     try {
       const { userId } = req.params;
@@ -91,46 +90,78 @@ const userController = {
         username,
         email,
         about,
-        profileImg,
-        coverImg,
         experience,
         socialMediaLinks,
-        address
+        address,
       } = req.body;
+      console.log(socialMediaLinks);
+      const profileImg = req.files?.profileImg?.[0];
+      const coverImg = req.files?.coverImg?.[0];
+
+      let profileImgUrl = null;
+      let coverImgUrl = null;
+
+      if (profileImg) {
+        const profileImgBase64 = convertToBase64(
+          profileImg.buffer,
+          profileImg.mimetype
+        );
+        if (profileImgBase64) {
+          profileImgUrl = await uploadFiletoCloudinary(profileImgBase64);
+        }
+      }
+
+      if (coverImg) {
+        const coverImgBase64 = convertToBase64(
+          coverImg.buffer,
+          coverImg.mimetype
+        );
+        if (coverImgBase64) {
+          coverImgUrl = await uploadFiletoCloudinary(coverImgBase64);
+        }
+      }
 
       const user = await User.findById(userId);
-
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res
+          .status(404)
+          .json({ message: "User not found", status: "FAILED" });
       }
-  
+
       if (fullname) user.fullname = fullname;
       if (username) user.username = username;
       if (email) user.email = email;
-      if (profileImg) user.profileImg = profileImg;
-      if (coverImg) user.coverImg = coverImg;
+      if (profileImgUrl) user.profileImg = profileImgUrl.secure_url;
+      if (coverImgUrl) user.coverImg = coverImgUrl.secure_url;
       if (about) user.about = about;
       if (experience) user.experience = experience;
-
-      // // Update social media links if provided
-      // if (socialMediaLinks) {
-      //   user.socialMediaLinks = {
-      //     ...user.socialMediaLinks,
-      //     ...socialMediaLinks,
-      //   };
-      // }
-
-      // Save the updated user information
-      const updatedUser = await user.save();
-      if (updatedUser) {
-        // Return the updated user as a response
-        return res.status(200).json(updatedUser);
+      if (address) {
+        user.address = {
+          ...user.address,
+          ...address,
+        };
       }
+      if (socialMediaLinks && Array.isArray(socialMediaLinks)) {
+        user.socialMediaLinks = {
+          ...(user.socialMediaLinks || {}), 
+          ...Object.fromEntries(
+            socialMediaLinks.map((link) => [link.platform, link.url]) 
+          ),
+        };
+      }
+      const updatedUser = await user.save();
+
+      return res.status(200).json({
+        message: "User updated successfully",
+        status: "SUCCESS",
+        data: updatedUser,
+      });
     } catch (error) {
-      console.error(error);
-      return res 
-        .status(500)
-        .json({ message: "Server error while updating user" });
+      console.error("Error updating user:", error);
+      return res.status(500).json({
+        message: "Server error while updating user",
+        status: "FAILED",
+      });
     }
   },
   /**
@@ -148,15 +179,11 @@ const userController = {
   getUserInfo: async (req, res) => {
     try {
       const { userId } = req.params;
-
-      // Find the user by userId, excluding the password field
-      const user = await User.findById(userId).select("-password"); // '-password' will exclude it from the result
+      const user = await User.findById(userId).select("-password");
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-
-      // Send back the user data without password
       return res.status(200).json(user);
     } catch (error) {
       console.error(error);

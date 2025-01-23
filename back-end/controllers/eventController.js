@@ -2,7 +2,6 @@ const convertToBase64 = require("../helper/fileToBase64");
 const Event = require("../models/culturalfit/eventSchema.model");
 const { uploadFiletoCloudinary } = require("../utils/cloudinayFileUpload");
 
-
 const addEvent = async (req, res) => {
   try {
     const {
@@ -16,6 +15,7 @@ const addEvent = async (req, res) => {
       addtionalInfo,
     } = req.body;
     const file = req.file;
+    console.log(file);
     if (!file) {
       return res.status(401).json({
         message: "Event poster required..!",
@@ -103,7 +103,6 @@ const getAllEvents = async (req, res) => {
       .json({ error: "Error fetching events", details: err });
   }
 };
-
 
 const deleteEvent = async (req, res) => {
   const { eventId } = req.params;

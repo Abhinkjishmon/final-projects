@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchUserProfile } from "@/redux/userInfoSlice";
 import { updateUserInfo } from "@/apiService.js/auth.service";
+import { Spinner } from "../..";
+import { toast } from "react-toastify";
 
 function EditProfilePage() {
   const { profileInfo } = useSelector((state) => state.userProfile);
@@ -31,6 +33,7 @@ function EditProfilePage() {
     },
   });
   const [changesProfileInfo, setChangesProfileInfo] = useState({});
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     dispatch(fetchUserProfile(id));
   }, [dispatch, id]);
@@ -72,7 +75,6 @@ function EditProfilePage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-
     // Append basic profile fields
     formData.append("fullname", profile.fullName);
     formData.append("email", profile.email);
@@ -84,12 +86,11 @@ function EditProfilePage() {
     if (changesProfileInfo.coverImage) {
       formData.append("coverImg", changesProfileInfo.coverImage);
     }
-
-    // Append social media links
     profile.socialMedia.forEach((link, index) => {
-      formData.append(`socialMedia[${index}]`, link);
+      formData.append(`socialMediaLinks[${index}][platform]`, link.platform);
+      formData.append(`socialMediaLinks[${index}][url]`, link.url);
     });
-
+    
     // Append address fields
     Object.entries(profile.address).forEach(([key, value]) => {
       formData.append(`address[${key}]`, value);
@@ -97,7 +98,15 @@ function EditProfilePage() {
     updateUserProfile(id, formData);
   };
   async function updateUserProfile(id, formData) {
-    const responsce = await updateUserInfo(id, formData);
+    setLoader(true);
+    const response = await updateUserInfo(id, formData);
+    if (response.status !== "SUCCESS") {
+      toast.error(response.message);
+      setLoader(false);
+    } else {
+      toast.success(response.message);
+      setLoader(false);
+    }
   }
 
   return (
@@ -132,7 +141,6 @@ function EditProfilePage() {
                 </div>
               </div>
 
-              {/* Basic Information */}
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -213,15 +221,13 @@ function EditProfilePage() {
                   />
                 </div>
               </div>
-
-              {/* Submit Button */}
               <div className="mt-8">
                 <button
                   type="submit"
                   className="w-full flex justify-center items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Save size={20} />
-                  Save Changes
+                  {loader ? <Spinner /> : "Save Changes"}
                 </button>
               </div>
             </div>

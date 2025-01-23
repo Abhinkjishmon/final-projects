@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { Spinner } from "../..";
 
 export function AssignmentDetails({ assignment, onClose }) {
+  console.log(assignment?._id);
   const [file, setFile] = useState(null);
   const [loader, setLoader] = useState(false);
 
@@ -31,7 +32,7 @@ export function AssignmentDetails({ assignment, onClose }) {
     }
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("assignmentId", assignment._id);
+    formData.append("assignmentId", assignment?._id);
     setLoader(true);
     const response = await submitAssignments(formData);
     if (response.status !== "SUCCESS") {

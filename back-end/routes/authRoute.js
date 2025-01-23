@@ -1,6 +1,5 @@
 const express = require("express");
 const multer = require("multer");
-const upload = multer();
 const { logIn } = require("../controllers/authController");
 const userController = require("../controllers/authController");
 const {
@@ -9,12 +8,17 @@ const {
 } = require("../middleware/verifyjwt");
 
 const router = express.Router();
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 router.post("/login", userController.login);
 router.post("/register", userController.register);
 router.put(
   "/update/:userId",
-  upload.none(),
+  upload.fields([
+    { name: "profileImg", maxCount: 1 },
+    { name: "coverImg", maxCount: 1 },
+  ]),
   isAuthorizedUser,
   userController.updateUser
 );

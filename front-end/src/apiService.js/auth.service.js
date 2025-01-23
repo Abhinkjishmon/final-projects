@@ -25,7 +25,6 @@ export const register = async (formData) => {
   }
 };
 
-
 export const login = async (formData) => {
   try {
     const { data } = await axiosInstance.post(
@@ -53,7 +52,9 @@ export const getUserInfo = async (userId) => {
 };
 
 export const updateUserInfo = async (userId, formData) => {
-  
+  for (let [key, value] of formData.entries()) {
+    console.log(`${key}: ${value}`);
+  }
   try {
     const { data } = await axiosInstance.put(
       apiEndpoints.auth.updateUser(userId),

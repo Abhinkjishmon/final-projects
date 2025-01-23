@@ -9,7 +9,8 @@ const platformIcons = {
 };
 
 function SocialMediaInput({ socialMedia, onChange }) {
-  const handleAdd = () => {
+  const handleAdd = (e) => {
+     e.preventDefault();
     onChange([...socialMedia, { platform: "twitter", url: "" }]);
   };
 

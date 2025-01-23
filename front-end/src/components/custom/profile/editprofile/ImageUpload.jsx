@@ -10,7 +10,7 @@ export function ImageUpload({ label, imageUrl, onChange, className = "" }) {
     if (file) {
       reader.onload = () => {
         setImage(reader.result);
-        onChange(reader.result);
+        onChange(file);
       };
       reader.readAsDataURL(file);
     }

@@ -111,6 +111,7 @@ const deleteAssignment = async (req, res) => {
 const submitAssignment = async (req, res) => {
   try {
     const { assignmentId, userId } = req.body;
+    console.log(assignmentId, userId)
     const file = req.file;
     if (!file) {
       return res.status(400).json({

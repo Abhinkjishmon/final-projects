@@ -58,3 +58,4 @@ router.delete("/delete-event/:eventId", isAuthorizedUser, deleteEvent);
   router.get("/user/blogs", isAuthorizedUser, getUserBlogs);
 
 module.exports = router;
+ 
