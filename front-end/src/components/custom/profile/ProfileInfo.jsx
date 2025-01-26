@@ -12,13 +12,16 @@ function ProfileInfo({ profileInfo }) {
             {profileInfo?.about ? (
               <p className="text-gray-600">{profileInfo?.about}</p>
             ) : (
-              <p>No Bio</p>
+              <p>Write about your self</p>
             )}
 
             <h2 className="text-xl font-bold text-gray-900 mt-6 mb-4">
               What I'm Doing
             </h2>
-            <p className="text-gray-600 mt-2">{profileInfo?.experience}</p>
+            {
+             profileInfo?.experience? <p className="text-gray-600 mt-2">{profileInfo?.experience}</p>:<>Add your experience</>
+            }
+            
           </div>
         </div>
 
@@ -30,10 +33,15 @@ function ProfileInfo({ profileInfo }) {
             <div className="space-y-4">
               <div className="flex items-center space-x-2 text-gray-600">
                 <MapPin className="h-5 w-5" />
-                <span>
-                  {profileInfo?.address.street}, {profileInfo?.address.city},{" "}
-                  {profileInfo?.address.state}, {profileInfo?.address.country}
-                </span>
+                {profileInfo?.address ? (
+                  <span>
+                    {profileInfo?.address?.street}, {profileInfo?.address?.city}
+                    , {profileInfo?.address?.state},{" "}
+                    {profileInfo?.address?.country}
+                  </span>
+                ) : (
+                  "Add your address"
+                )}
               </div>
               <div>
                 {profileInfo?.socialMediaLinks?.twitter && (

@@ -69,9 +69,6 @@ const BusinessServices = () => {
               alt="Team collaboration"
               className="w-full h-auto"
             />
-            <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-4 shadow-lg hover:scale-110 transition-transform">
-              <Play className="w-6 h-6 text-blue-600" />
-            </button>
           </div>
 
           <div className="space-y-4 md:w-1/2 md:h-96">
